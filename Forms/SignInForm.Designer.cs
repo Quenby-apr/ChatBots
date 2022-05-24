@@ -55,7 +55,7 @@
             this.textBoxLogin.Location = new System.Drawing.Point(30, 68);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(195, 20);
-            this.textBoxLogin.TabIndex = 6;
+            this.textBoxLogin.TabIndex = 0;
             // 
             // labelPassword1
             // 

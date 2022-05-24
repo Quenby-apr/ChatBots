@@ -108,11 +108,23 @@
     <Compile Include="Database\Interfaces\IChannelStorage.cs" />
     <Compile Include="Database\Interfaces\IDinoWorldStorage.cs" />
     <Compile Include="Database\Interfaces\IUserStorage.cs" />
+    <Compile Include="Forms\TwitchChannelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TwitchChannelForm.Designer.cs">
+      <DependentUpon>TwitchChannelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProfileForm.Designer.cs">
+      <DependentUpon>ProfileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SignInForm.cs">
       <SubType>Form</SubType>
@@ -128,8 +140,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\TwitchChannelForm.resx">
+      <DependentUpon>TwitchChannelForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProfileForm.resx">
+      <DependentUpon>ProfileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SignInForm.resx">
       <DependentUpon>SignInForm.cs</DependentUpon>

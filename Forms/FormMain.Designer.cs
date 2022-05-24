@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkedListBoxTwitch = new System.Windows.Forms.CheckedListBox();
             this.labelTwitch = new System.Windows.Forms.Label();
-            this.checkedListBoxDiscord = new System.Windows.Forms.CheckedListBox();
             this.labelDiscord = new System.Windows.Forms.Label();
             this.buttonProfile = new System.Windows.Forms.Button();
             this.buttonAddTwitch = new System.Windows.Forms.Button();
@@ -39,17 +37,10 @@
             this.buttonAddDiscord = new System.Windows.Forms.Button();
             this.buttonDeleteDiscord = new System.Windows.Forms.Button();
             this.buttonUpdateDiscord = new System.Windows.Forms.Button();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.listBoxTwitch = new System.Windows.Forms.ListBox();
+            this.listBoxDiscord = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
-            // 
-            // checkedListBoxTwitch
-            // 
-            this.checkedListBoxTwitch.BackColor = System.Drawing.Color.SkyBlue;
-            this.checkedListBoxTwitch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.checkedListBoxTwitch.FormattingEnabled = true;
-            this.checkedListBoxTwitch.Location = new System.Drawing.Point(45, 59);
-            this.checkedListBoxTwitch.Name = "checkedListBoxTwitch";
-            this.checkedListBoxTwitch.Size = new System.Drawing.Size(254, 227);
-            this.checkedListBoxTwitch.TabIndex = 0;
             // 
             // labelTwitch
             // 
@@ -59,16 +50,6 @@
             this.labelTwitch.Size = new System.Drawing.Size(83, 13);
             this.labelTwitch.TabIndex = 1;
             this.labelTwitch.Text = "Twitch каналы:";
-            // 
-            // checkedListBoxDiscord
-            // 
-            this.checkedListBoxDiscord.BackColor = System.Drawing.Color.SkyBlue;
-            this.checkedListBoxDiscord.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.checkedListBoxDiscord.FormattingEnabled = true;
-            this.checkedListBoxDiscord.Location = new System.Drawing.Point(361, 59);
-            this.checkedListBoxDiscord.Name = "checkedListBoxDiscord";
-            this.checkedListBoxDiscord.Size = new System.Drawing.Size(254, 227);
-            this.checkedListBoxDiscord.TabIndex = 2;
             // 
             // labelDiscord
             // 
@@ -163,12 +144,51 @@
             this.buttonUpdateDiscord.UseVisualStyleBackColor = false;
             this.buttonUpdateDiscord.Click += new System.EventHandler(this.buttonUpdateDiscord_Click);
             // 
+            // buttonConnect
+            // 
+            this.buttonConnect.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.buttonConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonConnect.Location = new System.Drawing.Point(250, 468);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(145, 52);
+            this.buttonConnect.TabIndex = 11;
+            this.buttonConnect.Text = "Подключиться";
+            this.buttonConnect.UseVisualStyleBackColor = false;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
+            // listBoxTwitch
+            // 
+            this.listBoxTwitch.BackColor = System.Drawing.Color.SkyBlue;
+            this.listBoxTwitch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBoxTwitch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBoxTwitch.FormattingEnabled = true;
+            this.listBoxTwitch.ItemHeight = 16;
+            this.listBoxTwitch.Location = new System.Drawing.Point(45, 59);
+            this.listBoxTwitch.Name = "listBoxTwitch";
+            this.listBoxTwitch.Size = new System.Drawing.Size(254, 226);
+            this.listBoxTwitch.TabIndex = 12;
+            // 
+            // listBoxDiscord
+            // 
+            this.listBoxDiscord.BackColor = System.Drawing.Color.SkyBlue;
+            this.listBoxDiscord.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBoxDiscord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBoxDiscord.FormattingEnabled = true;
+            this.listBoxDiscord.ItemHeight = 16;
+            this.listBoxDiscord.Location = new System.Drawing.Point(364, 59);
+            this.listBoxDiscord.Name = "listBoxDiscord";
+            this.listBoxDiscord.Size = new System.Drawing.Size(254, 226);
+            this.listBoxDiscord.TabIndex = 13;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(691, 532);
+            this.Controls.Add(this.listBoxDiscord);
+            this.Controls.Add(this.listBoxTwitch);
+            this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.buttonUpdateDiscord);
             this.Controls.Add(this.buttonDeleteDiscord);
             this.Controls.Add(this.buttonAddDiscord);
@@ -177,11 +197,10 @@
             this.Controls.Add(this.buttonAddTwitch);
             this.Controls.Add(this.buttonProfile);
             this.Controls.Add(this.labelDiscord);
-            this.Controls.Add(this.checkedListBoxDiscord);
             this.Controls.Add(this.labelTwitch);
-            this.Controls.Add(this.checkedListBoxTwitch);
             this.Name = "FormMain";
             this.Text = "Основное окно";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -189,10 +208,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.CheckedListBox checkedListBoxTwitch;
         private System.Windows.Forms.Label labelTwitch;
-        private System.Windows.Forms.CheckedListBox checkedListBoxDiscord;
         private System.Windows.Forms.Label labelDiscord;
         private System.Windows.Forms.Button buttonProfile;
         private System.Windows.Forms.Button buttonAddTwitch;
@@ -201,6 +217,9 @@
         private System.Windows.Forms.Button buttonAddDiscord;
         private System.Windows.Forms.Button buttonDeleteDiscord;
         private System.Windows.Forms.Button buttonUpdateDiscord;
+        private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.ListBox listBoxTwitch;
+        private System.Windows.Forms.ListBox listBoxDiscord;
     }
 }
 

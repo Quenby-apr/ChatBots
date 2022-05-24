@@ -9,7 +9,7 @@ namespace ChatBots.Database.Interfaces
 {
     public interface IChannelStorage
     {
-        Task<List<ChannelModel>> GetFullListAsync();
+        Task<Dictionary<string, ChannelModel>> GetFullListAsync();
         Task<ChannelModel> GetElementAsync(ChannelModel model);
         void InsertAsync(ChannelModel model);
         void UpdateAsync(ChannelModel model);

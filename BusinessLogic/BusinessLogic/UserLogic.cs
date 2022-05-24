@@ -40,7 +40,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 return userViewList;
             }
 
-            if (model.Login.Any())
+            if (!string.IsNullOrEmpty(model.Login))
             {
                 byte[] password = encoder.Encrypt(model.Password);
                 UserModel user = new UserModel()

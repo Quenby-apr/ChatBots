@@ -19,31 +19,126 @@ namespace ChatBots.BusinessLogic.BusinessLogic
 
         public List<ChannelModel> Read(ChannelModel model)
         {
+            var channelList = new List<ChannelModel>();
             if (model == null)
             {
-                return _channelStorage.GetFullListAsync().Result;
+                var channelDict = Task.Run(() => _channelStorage.GetFullListAsync()).Result;
+                
+                foreach (var element in channelDict)
+                {
+                    if (Program.User.Login == element.Value.UserName)
+                    {
+                        channelList.Add(new ChannelModel()
+                        {
+                            ChannelName = element.Value.ChannelName,
+                            Type = element.Value.Type,
+                            UserName = element.Value.UserName,
+                            Default = element.Value.Default,
+                            DiscordID = element.Value.DiscordID,
+                            Token = element.Value.Token,
+                            IsDino = element.Value.IsDino,
+                            IsFlip = element.Value.IsFlip,
+                            IsRoll = element.Value.IsRoll,
+                            IsGibbet = element.Value.IsGibbet
+                        });
+                    }
+                };
+                return channelList;
             }
-            if (model.ChannelName.Any() && model.Type=="T")
+            if (!string.IsNullOrEmpty(model.ChannelName) && model.Type == "Twitch")
             {
-                return new List<ChannelModel> { _channelStorage.GetElementAsync(model).Result };
+                List<ChannelModel> result = new List<ChannelModel>();
+                ChannelModel channel = Task.Run(() => _channelStorage.GetElementAsync(model)).Result;
+                if (Program.User.Login == channel.UserName)
+                {
+                    result.Add(channel);
+                }
+                return result;
             }
+            if (model.Type == "Twitch")
+            {
+                var channelDict = Task.Run(() => _channelStorage.GetFullListAsync()).Result;
+                if (channelDict != null) {
+                    foreach (var element in channelDict)
+                    {
+                        if (Program.User.Login == element.Value.UserName)
+                        {
+                            if (element.Value.Type == "Twitch")
+                            {
+                                channelList.Add(new ChannelModel()
+                                {
+                                    ChannelName = element.Value.ChannelName,
+                                    Type = element.Value.Type,
+                                    UserName = element.Value.UserName,
+                                    Default = element.Value.Default,
+                                    DiscordID = element.Value.DiscordID,
+                                    Token = element.Value.Token,
+                                    IsDino = element.Value.IsDino,
+                                    IsFlip = element.Value.IsFlip,
+                                    IsRoll = element.Value.IsRoll,
+                                    IsGibbet = element.Value.IsGibbet
+                                });
+                            }
+                        }
+                    };
+                }
+                return channelList;
+            }
+            if (model.Type == "Discord")
+            {
+                var channelDict = Task.Run(() => _channelStorage.GetFullListAsync()).Result;
+                if (channelDict != null)
+                {
+                    foreach (var element in channelDict)
+                    {
+                        if (Program.User.Login == element.Value.UserName)
+                        {
+                            if (element.Value.Type == "Discord")
+                            {
+                                channelList.Add(new ChannelModel()
+                                {
+                                    ChannelName = element.Value.ChannelName,
+                                    Type = element.Value.Type,
+                                    UserName = element.Value.UserName,
+                                    Default = element.Value.Default,
+                                    DiscordID = element.Value.DiscordID,
+                                    Token = element.Value.Token,
+                                    IsDino = element.Value.IsDino,
+                                    IsFlip = element.Value.IsFlip,
+                                    IsRoll = element.Value.IsRoll,
+                                    IsGibbet = element.Value.IsGibbet
+                                });
+                            }
+                        }
+                    };
+                }
+                return channelList;
+            }
+           
             //ОБРАБОТКА ДЛЯ ДИСКОРДА
-            return _channelStorage.GetFullListAsync().Result;
+            return channelList;
         }
 
         public void CreateOrUpdate(ChannelModel model)
         {
-            var element = _channelStorage.GetElementAsync(new ChannelModel
+            var element = Task.Run(() => _channelStorage.GetElementAsync(new ChannelModel
             {
                 ChannelName = model.ChannelName,
                 Type = model.Type,
-                UserName = model.UserName
-            }).Result;
-            if (element != null)
+                UserName = model.UserName,
+                Default = model.Default,
+                DiscordID = model.DiscordID,
+                Token = model.Token,
+                IsDino = model.IsDino,
+                IsFlip = model.IsFlip,
+                IsRoll = model.IsRoll,
+                IsGibbet = model.IsGibbet
+            })).Result;
+            if (element != null && element.UserName != model.UserName)
             {
-                throw new Exception("Уже есть канал с таким названием");
+                throw new Exception("На данном канале бот уже установлен");
             }
-            if (string.IsNullOrEmpty(model.ChannelName) && (model.Type == "T"))
+            if (element != null && string.IsNullOrEmpty(model.ChannelName) && (model.Type == "Twitch"))
             {
                 _channelStorage.UpdateAsync(model);
             }
@@ -54,10 +149,12 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         }
         public void Delete(ChannelModel model)
         {
-            var element = _channelStorage.GetElementAsync(new ChannelModel
+            var element = Task.Run(() => _channelStorage.GetElementAsync(new ChannelModel
             {
-                ChannelName = model.ChannelName
-            }).Result;
+                ChannelName = model.ChannelName,
+                Type = model.Type,
+                DiscordID = model.DiscordID
+            })).Result;
             if (element == null)
             {
                 throw new Exception("Канал не найден");
