@@ -52,7 +52,7 @@ namespace ChatBots.Forms
                 Program.User = _user;
                 var form = Container.Resolve<FormMain>();
                 form.Show();
-                Close();
+                Hide();
             }
             else
             {

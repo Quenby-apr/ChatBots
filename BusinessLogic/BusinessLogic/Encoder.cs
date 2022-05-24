@@ -8,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace ChatBots.BusinessLogic.BusinessLogic
 {
-    public class Encoder
+    internal class Encoder
     {
-        Aes myAes;
-        public Encoder()
-        {
-            myAes = Aes.Create();
-        }
+        static byte[] key = new byte[] { 242, 69, 11, 5, 141, 128, 118, 19, 191, 128, 2, 45, 50, 125, 131, 247,115,193,33, 130, 224, 159, 234, 66, 239, 83, 191, 167, 224, 74, 83, 66 };
+        static byte[] iv = new byte[] { 110, 140, 78, 74, 53, 123, 183, 226, 150, 92, 213, 60, 80, 35, 215, 90 };
+
+
         public byte[] Encrypt(string text)
         {
-            return EncryptStringToBytes_Aes(text, myAes.Key, myAes.IV);
+            return EncryptStringToBytes_Aes(text, key, iv);
         }
 
         public string Decrypt(byte[] text)
         {
-            return DecryptStringFromBytes_Aes(text, myAes.Key, myAes.IV);
+            return DecryptStringFromBytes_Aes(text, key, iv);
         }
 
         private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)

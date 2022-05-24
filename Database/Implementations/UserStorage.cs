@@ -1,5 +1,8 @@
 ﻿using ChatBots.BusinessLogic.Models;
 using ChatBots.Database.Interfaces;
+using FireSharp;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using FireSharp.Response;
 using System;
 using System.Collections.Generic;
@@ -14,17 +17,16 @@ namespace ChatBots.Database.Implementations
     {
         public FireBase db = FireBase.getInstance();
 
-        public async Task<List<UserModel>> GetFullListAsync()
+        public async Task<Dictionary<string, UserModel>> GetFullListAsync()
         {
             FirebaseResponse response = await db.client.GetAsync("Users/");
-            return response.ResultAs<List<UserModel>>();
+            return response.ResultAs<Dictionary<string,UserModel>>();
         }
 
         public async Task<UserModel> GetElementAsync(UserModel model)
         {
             FirebaseResponse response = await db.client.GetAsync("Users/" + model.Login);
             return response.ResultAs<UserModel>();
-
         }
 
         public async void InsertAsync(UserModel model)

@@ -9,7 +9,7 @@ namespace ChatBots.Database.Interfaces
 {
     public interface IUserStorage
     {
-        Task<List<UserModel>> GetFullListAsync();
+        Task<Dictionary<string, UserModel>> GetFullListAsync();
         Task<UserModel> GetElementAsync(UserModel model);
         void InsertAsync(UserModel model);
         void UpdateAsync(UserModel model);

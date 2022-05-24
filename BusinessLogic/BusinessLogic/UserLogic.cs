@@ -1,5 +1,7 @@
 ﻿using ChatBots.BusinessLogic.Models;
+using ChatBots.Database;
 using ChatBots.Database.Interfaces;
+using FireSharp.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,17 +26,18 @@ namespace ChatBots.BusinessLogic.BusinessLogic
 
             if (model == null)
             {
-                List<UserModel> userList = _userStorage.GetFullListAsync().Result;
+                var userList = Task.Run(() => _userStorage.GetFullListAsync()).Result;
                 foreach (var element in userList)
                 {
                     userViewList.Add(new UserViewModel()
                     {
-                        Login = element.Login,
-                        Password = encoder.Decrypt(element.Password),
-                        TwitchChannelNames = element.TwitchChannelNames,
-                        DiscordChannelNames = element.DiscordChannelNames
+                        Login = element.Value.Login,
+                        Password = encoder.Decrypt(element.Value.Password),
+                        TwitchChannelNames = element.Value.TwitchChannelNames,
+                        DiscordChannelNames = element.Value.DiscordChannelNames
                     });
                 };
+                return userViewList;
             }
 
             if (model.Login.Any())
@@ -47,8 +50,8 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                     TwitchChannelNames = model.TwitchChannelNames,
                     DiscordChannelNames = model.DiscordChannelNames
                 };
-                var userList = new List<UserModel> { _userStorage.GetElementAsync(user).Result };
-                
+                var userList = new List<UserModel> { Task.Run(() => _userStorage.GetElementAsync(user)).Result};
+
                 foreach (var element in userList)
                 {
                     userViewList.Add(new UserViewModel()
@@ -60,7 +63,6 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                     });
                 };
             }
-            
             return userViewList;
         }
 
@@ -68,10 +70,10 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         {
             Encoder encoder = new Encoder();
             byte[] password = encoder.Encrypt(model.Password);
-            var element = _userStorage.GetElementAsync(new UserModel
+            var element = Task.Run(() => _userStorage.GetElementAsync(new UserModel
             {
                 Login = model.Login
-            }).Result;
+            })).Result;
             UserModel user = new UserModel()
             {
                 Login = model.Login,

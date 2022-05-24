@@ -49,7 +49,7 @@
             this.textBoxPassword1.Location = new System.Drawing.Point(37, 145);
             this.textBoxPassword1.Name = "textBoxPassword1";
             this.textBoxPassword1.Size = new System.Drawing.Size(195, 20);
-            this.textBoxPassword1.TabIndex = 0;
+            this.textBoxPassword1.TabIndex = 2;
             // 
             // labelPassword1
             // 
@@ -67,7 +67,7 @@
             this.textBoxLogin.Location = new System.Drawing.Point(37, 64);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(195, 20);
-            this.textBoxLogin.TabIndex = 2;
+            this.textBoxLogin.TabIndex = 0;
             // 
             // labelLogin
             // 

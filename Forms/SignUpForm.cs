@@ -23,7 +23,7 @@ namespace ChatBots.Forms
             InitializeComponent();
             this.logic = logic;
         }
-        
+
         private void buttonSignUp_Click(object sender, EventArgs e)
         {
             clearForm();
@@ -74,6 +74,5 @@ namespace ChatBots.Forms
             labelMatchError.Visible = false;
             labelPassword2Error.Visible = false;
         }
-
     }
 }
