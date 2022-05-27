@@ -67,7 +67,9 @@ namespace ChatBots
 
         private void buttonProfile_Click(object sender, EventArgs e)
         {
-
+            var form = Container.Resolve<ProfileForm>();
+            form.ShowDialog();
+            LoadData();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -77,11 +79,21 @@ namespace ChatBots
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            if (Program.User != null)
+            {
+                Application.Exit();
+            }
         }
 
         private void LoadData()
         {
+            if (Program.User == null)
+            {
+                var form = Container.Resolve<SignInForm>();
+                form.Show();
+                Close();
+                return;
+            }
             try
             {
                 var listT = logic.Read(new ChannelModel
@@ -113,7 +125,7 @@ namespace ChatBots
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)
-        {
+        {//Добавить список чекбоксов бота
 
         }
     }

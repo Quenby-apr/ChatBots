@@ -66,7 +66,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
             return userViewList;
         }
 
-        public void CreateOrUpdate(UserViewModel model)
+        public void Create(UserViewModel model)
         {
             Encoder encoder = new Encoder();
             byte[] password = encoder.Encrypt(model.Password);
@@ -85,13 +85,30 @@ namespace ChatBots.BusinessLogic.BusinessLogic
             {
                 throw new Exception("Такой пользователь уже существует");
             }
-            if (string.IsNullOrEmpty(model.Login))
-            {
-                _userStorage.UpdateAsync(user);
-            }
             else
             {
                 _userStorage.InsertAsync(user);
+            }
+        }
+        public void Update(UserViewModel model)
+        {
+            Encoder encoder = new Encoder();
+            byte[] password = encoder.Encrypt(model.Password);
+            var element = Task.Run(() => _userStorage.GetElementAsync(new UserModel
+            {
+                Login = model.Login
+            })).Result;
+            UserModel user = new UserModel()
+            {
+                Login = model.Login,
+                Password = password,
+                TwitchChannelNames = model.TwitchChannelNames,
+                DiscordChannelNames = model.DiscordChannelNames
+            };
+
+            if (element != null)
+            {
+                _userStorage.UpdateAsync(user);
             }
         }
     }

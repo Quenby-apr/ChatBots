@@ -49,7 +49,7 @@ namespace ChatBots.Forms
             }
             try
             {
-                logic.CreateOrUpdate(new UserViewModel
+                logic.Create(new UserViewModel
                 {
                     Login = textBoxLogin.Text,
                     Password = textBoxPassword1.Text,

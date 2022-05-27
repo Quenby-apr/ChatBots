@@ -94,13 +94,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic\BusinessLogic\ChannelLogic.cs" />
+    <Compile Include="BusinessLogic\BusinessLogic\DinoDeserealization.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\DinoLogic.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\Encoder.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\UserLogic.cs" />
+    <Compile Include="BusinessLogic\TwitchCommands\DinoCommands.cs" />
     <Compile Include="BusinessLogic\Models\ChannelModel.cs" />
-    <Compile Include="BusinessLogic\Models\DinoModel.cs" />
+    <Compile Include="BusinessLogic\Models\Dinozavr.cs" />
+    <Compile Include="BusinessLogic\Models\Emotion.cs" />
+    <Compile Include="BusinessLogic\Models\Herbivore.cs" />
+    <Compile Include="BusinessLogic\Models\Predator.cs" />
     <Compile Include="BusinessLogic\Models\UserModel.cs" />
     <Compile Include="BusinessLogic\Models\UserViewModel.cs" />
+    <Compile Include="BusinessLogic\TwitchCommands\SimpleCommands.cs" />
+    <Compile Include="BusinessLogic\TwitchIRCClient.cs" />
     <Compile Include="Database\FireBase.cs" />
     <Compile Include="Database\Implementations\ChannelStorage.cs" />
     <Compile Include="Database\Implementations\DinoWorldStorage.cs" />

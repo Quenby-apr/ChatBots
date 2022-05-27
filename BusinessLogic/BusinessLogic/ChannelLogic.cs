@@ -28,19 +28,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 {
                     if (Program.User.Login == element.Value.UserName)
                     {
-                        channelList.Add(new ChannelModel()
-                        {
-                            ChannelName = element.Value.ChannelName,
-                            Type = element.Value.Type,
-                            UserName = element.Value.UserName,
-                            Default = element.Value.Default,
-                            DiscordID = element.Value.DiscordID,
-                            Token = element.Value.Token,
-                            IsDino = element.Value.IsDino,
-                            IsFlip = element.Value.IsFlip,
-                            IsRoll = element.Value.IsRoll,
-                            IsGibbet = element.Value.IsGibbet
-                        });
+                        channelList.Add(element.Value);
                     }
                 };
                 return channelList;
@@ -61,24 +49,9 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 if (channelDict != null) {
                     foreach (var element in channelDict)
                     {
-                        if (Program.User.Login == element.Value.UserName)
+                        if (Program.User.Login == element.Value.UserName && element.Value.Type == "Twitch")
                         {
-                            if (element.Value.Type == "Twitch")
-                            {
-                                channelList.Add(new ChannelModel()
-                                {
-                                    ChannelName = element.Value.ChannelName,
-                                    Type = element.Value.Type,
-                                    UserName = element.Value.UserName,
-                                    Default = element.Value.Default,
-                                    DiscordID = element.Value.DiscordID,
-                                    Token = element.Value.Token,
-                                    IsDino = element.Value.IsDino,
-                                    IsFlip = element.Value.IsFlip,
-                                    IsRoll = element.Value.IsRoll,
-                                    IsGibbet = element.Value.IsGibbet
-                                });
-                            }
+                            channelList.Add(element.Value);
                         }
                     };
                 }
@@ -91,24 +64,9 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 {
                     foreach (var element in channelDict)
                     {
-                        if (Program.User.Login == element.Value.UserName)
+                        if (Program.User.Login == element.Value.UserName && element.Value.Type == "Discord")
                         {
-                            if (element.Value.Type == "Discord")
-                            {
-                                channelList.Add(new ChannelModel()
-                                {
-                                    ChannelName = element.Value.ChannelName,
-                                    Type = element.Value.Type,
-                                    UserName = element.Value.UserName,
-                                    Default = element.Value.Default,
-                                    DiscordID = element.Value.DiscordID,
-                                    Token = element.Value.Token,
-                                    IsDino = element.Value.IsDino,
-                                    IsFlip = element.Value.IsFlip,
-                                    IsRoll = element.Value.IsRoll,
-                                    IsGibbet = element.Value.IsGibbet
-                                });
-                            }
+                            channelList.Add(element.Value);
                         }
                     };
                 }
@@ -121,19 +79,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
 
         public void CreateOrUpdate(ChannelModel model)
         {
-            var element = Task.Run(() => _channelStorage.GetElementAsync(new ChannelModel
-            {
-                ChannelName = model.ChannelName,
-                Type = model.Type,
-                UserName = model.UserName,
-                Default = model.Default,
-                DiscordID = model.DiscordID,
-                Token = model.Token,
-                IsDino = model.IsDino,
-                IsFlip = model.IsFlip,
-                IsRoll = model.IsRoll,
-                IsGibbet = model.IsGibbet
-            })).Result;
+            var element = Task.Run(() => _channelStorage.GetElementAsync(model)).Result;
             if (element != null && element.UserName != model.UserName)
             {
                 throw new Exception("На данном канале бот уже установлен");
