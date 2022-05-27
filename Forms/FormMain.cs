@@ -1,4 +1,5 @@
-﻿using ChatBots.BusinessLogic.BusinessLogic;
+﻿using ChatBots.BusinessLogic;
+using ChatBots.BusinessLogic.BusinessLogic;
 using ChatBots.BusinessLogic.Models;
 using ChatBots.Forms;
 using System;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
@@ -19,10 +21,12 @@ namespace ChatBots
         [Dependency]
         public new IUnityContainer Container { get; set; }
         private readonly ChannelLogic logic;
-        public FormMain(ChannelLogic logic)
+        private readonly DinoLogic dLogic;
+        public FormMain(ChannelLogic logic, DinoLogic dLogic)
         {
             InitializeComponent();
             this.logic = logic;
+            this.dLogic = dLogic;
         }
 
         private void buttonAddTwitch_Click(object sender, EventArgs e)
@@ -125,8 +129,30 @@ namespace ChatBots
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)
-        {//Добавить список чекбоксов бота
-
+        {
+            var listT = logic.Read(new ChannelModel
+            {
+                Type = "Twitch",
+                UserName = Program.User.Login
+            });
+            foreach (var twitchChannel in listT)
+            {
+                List<bool> botFunctions = new List<bool>()
+                {
+                    twitchChannel.IsRoll,
+                    twitchChannel.IsFlip,
+                    twitchChannel.IsDino,
+                    twitchChannel.IsGibbet
+                };
+                TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName,
+                "Quenby_Bot",
+                twitchChannel.Token,
+                botFunctions,
+                dLogic);
+                client.Connect();
+                CancellationTokenSource cancellation = new CancellationTokenSource();
+                Task.Run(() => client.Chat(cancellation.Token));
+            }
         }
     }
 }

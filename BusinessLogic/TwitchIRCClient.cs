@@ -22,7 +22,7 @@ namespace ChatBots.BusinessLogic
     public class TwitchIRCClient
     {
         [Dependency]
-        public new IUnityContainer Container { get; set; }
+        public IUnityContainer Container { get; set; }
         private readonly DinoLogic logic;
         private TcpClient client;
         private StreamReader reader;
@@ -32,13 +32,14 @@ namespace ChatBots.BusinessLogic
         public string BotName { get; private set; }
         public string ChannelName { get; private set; }
         private List<bool> botCheckBoxes;
-        private readonly int dinoWorldIndex = 3;
+        private readonly int dinoWorldIndex = 2;
 
 
         private Dictionary<string, Action<string, TwitchIRCClient>> answers = new Dictionary<string, Action<string, TwitchIRCClient>>();
         public TwitchIRCClient(string ChannelName, string BotName, string token, List<bool> botFunctions, DinoLogic logic)
         {
             botCheckBoxes = botFunctions;
+            this.logic = logic;
             InitCommands();
             commands = new List<string>();
             client = new TcpClient(TwitchInit.Host, TwitchInit.Port);
@@ -47,7 +48,6 @@ namespace ChatBots.BusinessLogic
             this.BotName = BotName;
             this.ChannelName = ChannelName;
             passToken = token;
-            this.logic = logic;
         }
 
         public void Connect()
@@ -130,9 +130,10 @@ namespace ChatBots.BusinessLogic
         }
         private void InitDinoWorld()
         {
-            DinoCommands dinoCommands = new DinoCommands(logic);
+            
             if (botCheckBoxes[dinoWorldIndex])
             {
+                var dinoCommands = new DinoCommands(logic);
                 answers.Add("!dino new", dinoCommands.CreateDino);
                 answers.Add("!dino dinner", dinoCommands.DoDinner);
                 answers.Add("!dino fruits", dinoCommands.CheckFruits);

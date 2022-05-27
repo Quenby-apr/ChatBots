@@ -25,6 +25,7 @@ namespace ChatBots.Database.Implementations
         {
             FirebaseResponse response = await db.client.GetAsync("Dinozavrs/" + model.Name);
             var resp = response.Body;
+            Console.WriteLine("a tut norm");
             Dinozavr dino = null;
             if (resp != null)
             {
@@ -44,6 +45,7 @@ namespace ChatBots.Database.Implementations
                 dino = myDes.Deserialize(resp);
                 return dino;
             }
+            Console.WriteLine("response NULL");
             return null;
         }
 
@@ -80,10 +82,10 @@ namespace ChatBots.Database.Implementations
             return response.ResultAs<Dictionary<string, List<string>>>();
         }
 
-        public async Task<List<string>> GetElementOwnerAsync(Dinozavr model)
+        public async Task<string> GetElementOwnerAsync(Dinozavr model)
         {
             FirebaseResponse response = await db.client.GetAsync("Owners/" + model.UserName);
-            return response.ResultAs<List<string>>();
+            return response.ResultAs<string>();
         }
 
         public async void InsertOwnerAsync(Dinozavr model)
@@ -93,7 +95,7 @@ namespace ChatBots.Database.Implementations
 
         public async void DeleteOwnerAsync(Dinozavr model)
         {
-            await db.client.DeleteAsync("Owners/" + model.UserName +"/"+model.Name);
+            await db.client.DeleteAsync("Owners/" + model.UserName);
         }
     }
 }

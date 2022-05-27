@@ -1,4 +1,5 @@
-﻿using FireSharp;
+﻿using ChatBots.Properties;
+using FireSharp;
 using FireSharp.Config;
 using FireSharp.Interfaces;
 
@@ -14,8 +15,8 @@ namespace ChatBots.Database
         {
             config = new FirebaseConfig
             {
-                AuthSecret = "QEko1K97XZMZtzKKhc77Eh8EmAXwGEUSxtpie53H",
-                BasePath = "https://dinoworld-474aa-default-rtdb.europe-west1.firebasedatabase.app/"
+                AuthSecret = Settings.AuthSecretFirebase,
+                BasePath = Settings.FirebasePath
             };
             client = new FirebaseClient(config);
         }

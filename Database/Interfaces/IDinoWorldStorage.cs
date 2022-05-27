@@ -18,7 +18,7 @@ namespace ChatBots.Database.Interfaces
         void DeleteAsync(Dinozavr model);
 
         Task<Dictionary<string, List<string>>> GetFullListOwnerAsync();
-        Task<List<string>> GetElementOwnerAsync(Dinozavr model);
+        Task<string> GetElementOwnerAsync(Dinozavr model);
         void InsertOwnerAsync(Dinozavr model);
         void DeleteOwnerAsync(Dinozavr model);
     }

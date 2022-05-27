@@ -28,29 +28,28 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 {
                     dinos.Add(element.Value);
                 };
-                return dinos;
             }
 
             if (!string.IsNullOrEmpty(model.UserName))
             {
-                List<string> dinoNames = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
-                foreach (var element in dinoNames)
+                string dinoName = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
+                if (dinoName == null)
                 {
-                    dinos.Add(Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(element)).Result);
-                };
-                return dinos;
+                    return new List<Dinozavr>();
+                }
+                dinos.Add(Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(dinoName)).Result);
             }
             return dinos;
         }
         public string CreateDino(Dinozavr model)
         {
-            List<string> dinoNames = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
-            if (dinoNames.Count > 0)
-                throw new Exception("У вас уже есть динозавр"); //на 1 человека 1 динозавр, в будущем можно будет убрать
+            string dinoName = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
+            if (dinoName != null)
+                return "У вас уже есть динозавр"; //на 1 человека 1 динозавр, в будущем можно будет убрать
             var element = Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(model.Name)).Result;
             if (element != null)
             {
-                throw new Exception("Динозавр с таким именем уже существует");
+                return "Динозавр с таким именем уже существует";
             }
             else
             {
@@ -58,10 +57,8 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 int value = rand.Next(0, 4);
                 if (value < 3)
                 {
-                    Herbivore herbivore = new Herbivore()
+                    Herbivore herbivore = new Herbivore(model.UserName, model.Name)
                     {
-                        UserName = model.UserName,
-                        Name = model.Name,
                         DiscordID = model.DiscordID
                     };
                     _dinoWorldStorage.InsertAsync(herbivore);
@@ -70,10 +67,8 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 }
                 else if (value == 3)
                 {
-                    Predator predator = new Predator()
+                    Predator predator = new Predator(model.UserName, model.Name)
                     {
-                        UserName = model.UserName,
-                        Name = model.Name,
                         DiscordID = model.DiscordID
                     };
                     _dinoWorldStorage.InsertAsync(predator);

@@ -1,5 +1,6 @@
 ﻿using ChatBots.BusinessLogic.BusinessLogic;
 using ChatBots.BusinessLogic.Models;
+using ChatBots.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +36,7 @@ namespace ChatBots.Forms
             if (checkBoxCustomBot.Checked == true)
             {
                 textBoxOAuthToken.Enabled = false;
-                textBoxOAuthToken.Text = "oauth:pembvf5gu1s816155ssjvta03qkn8u";
+                textBoxOAuthToken.Text = Settings.BotToken;
             }
             else 
             {
@@ -77,7 +78,7 @@ namespace ChatBots.Forms
             if (string.IsNullOrEmpty(nameChan))
             {
                 checkBoxCustomBot.Checked = true;
-                textBoxOAuthToken.Text = "oauth:pembvf5gu1s816155ssjvta03qkn8u";
+                textBoxOAuthToken.Text = Settings.BotToken;
                 checkBoxRoll.Checked = true;
                 checkBoxFlip.Checked = true;
                 checkBoxDinoWorld.Checked = true;

@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace ChatBots.BusinessLogic.Commands
 {
     public class DinoCommands
     {
+        [Dependency]
+        public IUnityContainer Container { get; set; }
         private DinoLogic _dinoLogic;
 
         public DinoCommands(DinoLogic dinoLogic)
@@ -32,25 +35,26 @@ namespace ChatBots.BusinessLogic.Commands
             {
                 dinoName = userName;
             }
-            client.SendMessage(_dinoLogic.CreateDino(new Herbivore()
-            {
-                UserName = userName,
-                Name = dinoName
-            }));
+            client.SendMessage(_dinoLogic.CreateDino(new Herbivore(userName, dinoName)));
         }
 
         public void DoDinner(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
             string answer = string.Empty;
-            var dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
-            if (dino == null)
+            });
+            if (dinos.Count() == 0)
             {
-                client.SendMessage(userName + ", вам нужен свой личный динозавр! " + Emotion.emotions["dinoStandart"]);
+                needNewDino(userName, client);
                 return;
+            }
+            else
+            {
+                dino = dinos[0];
             }
             if (dino.Busy)
             {
@@ -79,10 +83,20 @@ namespace ChatBots.BusinessLogic.Commands
         public void CheckFruits(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            Dinozavr dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0]; 
+            });
+            if (dinos.Count() == 0)
+            {
+                needNewDino(userName, client);
+                return;
+            }
+            else
+            {
+                dino = dinos[0];
+            }
             if (dino is Herbivore)
             {
                 var param = (Herbivore)dino;
@@ -97,10 +111,20 @@ namespace ChatBots.BusinessLogic.Commands
         public void CheckPreys(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            Dinozavr dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
+            });
+            if (dinos.Count() == 0)
+            {
+                needNewDino(userName, client);
+                return;
+            }
+            else
+            {
+                dino = dinos[0];
+            }
             if (dino is Predator)
             {
                 var param = (Predator)dino;
@@ -115,50 +139,84 @@ namespace ChatBots.BusinessLogic.Commands
         public void UpLvl(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            Dinozavr dino = null;
-            dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
+            });
+            if (dinos.Count() == 0)
+            {
+                needNewDino(userName, client);
+                return;
+            }
+            else
+            {
+                dino = dinos[0];
+            }
             client.SendMessage(_dinoLogic.UpLvl(dino));
         }
 
         public void CheckLvl(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            Dinozavr dino = null;
-            dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
+            });
+            if (dinos.Count() == 0)
+            {
+                needNewDino(userName, client);
+                return;
+            }
+            else
+            {
+                dino = dinos[0];
+            }
             client.SendMessage(_dinoLogic.GetLvl(dino));
         }
 
         public void CheckHP(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            Dinozavr dino = _dinoLogic.Read(new Herbivore()
+            Dinozavr dino;
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
+            });
+            if (dinos.Count() == 0)
+            {
+                needNewDino(userName, client);
+                return;
+            }
+            else
+            {
+                dino = dinos[0];
+            }
             client.SendMessage(userName + ", у вашего динозавра сейчас " + dino.HP + " здоровья");
         }
 
         public void KillDino(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
-            var dino = _dinoLogic.Read(new Herbivore()
+            var dinos = _dinoLogic.Read(new Herbivore()
             {
                 UserName = userName
-            })[0];
-            if (dino != null)
-            {
-                client.SendMessage(_dinoLogic.KillDino(dino));
-            }           
-            else
+            });
+            if (dinos.Count() == 0)
             {
                 client.SendMessage(userName + ", у вас и так нет ни единого динозавра " + Emotion.emotions["sadness"]);
+                return;
             }
+            else
+            {
+                client.SendMessage(_dinoLogic.KillDino(dinos[0]));
+            }
+        }
+
+        private void needNewDino(string userName, TwitchIRCClient client)
+        {
+            client.SendMessage(userName + ", вам нужен свой личный динозавр! " + Emotion.emotions["dinoStandart"]);
         }
     }
 }
