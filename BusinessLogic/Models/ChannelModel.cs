@@ -18,6 +18,7 @@ namespace ChatBots.BusinessLogic.Models
         public bool IsFlip { get; set; }
         public bool IsDino { get; set; }
         public bool IsGibbet { get; set; }
+        public bool IsCleaning { get; set; }
 
         public override string ToString()
         {

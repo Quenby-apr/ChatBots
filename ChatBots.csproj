@@ -94,10 +94,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic\BusinessLogic\ChannelLogic.cs" />
+    <Compile Include="BusinessLogic\BusinessLogic\CleaningLogic.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\DinoDeserealization.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\DinoLogic.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\Encoder.cs" />
+    <Compile Include="BusinessLogic\BusinessLogic\GibbetLogic.cs" />
     <Compile Include="BusinessLogic\BusinessLogic\UserLogic.cs" />
+    <Compile Include="BusinessLogic\GibbetDictionary.cs" />
     <Compile Include="BusinessLogic\TwitchCommands\DinoCommands.cs" />
     <Compile Include="BusinessLogic\Models\ChannelModel.cs" />
     <Compile Include="BusinessLogic\Models\Dinozavr.cs" />
@@ -147,6 +150,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Forms\TwitchChannelForm.resx">
       <DependentUpon>TwitchChannelForm.cs</DependentUpon>
     </EmbeddedResource>

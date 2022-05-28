@@ -39,6 +39,7 @@
             this.checkBoxFlip = new System.Windows.Forms.CheckBox();
             this.checkBoxDinoWorld = new System.Windows.Forms.CheckBox();
             this.checkBoxGibbet = new System.Windows.Forms.CheckBox();
+            this.checkBoxCleaning = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // labelChannelName
@@ -117,7 +118,7 @@
             // checkBoxRoll
             // 
             this.checkBoxRoll.AutoSize = true;
-            this.checkBoxRoll.Location = new System.Drawing.Point(464, 20);
+            this.checkBoxRoll.Location = new System.Drawing.Point(445, 19);
             this.checkBoxRoll.Name = "checkBoxRoll";
             this.checkBoxRoll.Size = new System.Drawing.Size(42, 17);
             this.checkBoxRoll.TabIndex = 7;
@@ -127,7 +128,7 @@
             // checkBoxFlip
             // 
             this.checkBoxFlip.AutoSize = true;
-            this.checkBoxFlip.Location = new System.Drawing.Point(464, 43);
+            this.checkBoxFlip.Location = new System.Drawing.Point(445, 42);
             this.checkBoxFlip.Name = "checkBoxFlip";
             this.checkBoxFlip.Size = new System.Drawing.Size(42, 17);
             this.checkBoxFlip.TabIndex = 8;
@@ -137,7 +138,7 @@
             // checkBoxDinoWorld
             // 
             this.checkBoxDinoWorld.AutoSize = true;
-            this.checkBoxDinoWorld.Location = new System.Drawing.Point(464, 67);
+            this.checkBoxDinoWorld.Location = new System.Drawing.Point(445, 66);
             this.checkBoxDinoWorld.Name = "checkBoxDinoWorld";
             this.checkBoxDinoWorld.Size = new System.Drawing.Size(76, 17);
             this.checkBoxDinoWorld.TabIndex = 9;
@@ -147,12 +148,22 @@
             // checkBoxGibbet
             // 
             this.checkBoxGibbet.AutoSize = true;
-            this.checkBoxGibbet.Location = new System.Drawing.Point(464, 91);
+            this.checkBoxGibbet.Location = new System.Drawing.Point(445, 90);
             this.checkBoxGibbet.Name = "checkBoxGibbet";
             this.checkBoxGibbet.Size = new System.Drawing.Size(75, 17);
             this.checkBoxGibbet.TabIndex = 10;
             this.checkBoxGibbet.Text = "Виселица";
             this.checkBoxGibbet.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleaning
+            // 
+            this.checkBoxCleaning.AutoSize = true;
+            this.checkBoxCleaning.Location = new System.Drawing.Point(445, 114);
+            this.checkBoxCleaning.Name = "checkBoxCleaning";
+            this.checkBoxCleaning.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxCleaning.TabIndex = 11;
+            this.checkBoxCleaning.Text = "Удаление банвордов";
+            this.checkBoxCleaning.UseVisualStyleBackColor = true;
             // 
             // TwitchChannelForm
             // 
@@ -160,6 +171,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(584, 251);
+            this.Controls.Add(this.checkBoxCleaning);
             this.Controls.Add(this.checkBoxGibbet);
             this.Controls.Add(this.checkBoxDinoWorld);
             this.Controls.Add(this.checkBoxFlip);
@@ -192,5 +204,6 @@
         private System.Windows.Forms.CheckBox checkBoxFlip;
         private System.Windows.Forms.CheckBox checkBoxDinoWorld;
         private System.Windows.Forms.CheckBox checkBoxGibbet;
+        private System.Windows.Forms.CheckBox checkBoxCleaning;
     }
 }

@@ -68,7 +68,8 @@ namespace ChatBots.Forms
                 IsRoll = checkBoxRoll.Checked,
                 IsFlip = checkBoxFlip.Checked,
                 IsDino = checkBoxDinoWorld.Checked,
-                IsGibbet = checkBoxGibbet.Checked
+                IsGibbet = checkBoxGibbet.Checked,
+                IsCleaning = checkBoxCleaning.Checked
             }
             );
             Close();
@@ -83,6 +84,7 @@ namespace ChatBots.Forms
                 checkBoxFlip.Checked = true;
                 checkBoxDinoWorld.Checked = true;
                 checkBoxGibbet.Checked = true;
+                checkBoxCleaning.Checked = true;
             }
 
             if (!string.IsNullOrEmpty(nameChan))
@@ -100,6 +102,7 @@ namespace ChatBots.Forms
                         checkBoxFlip.Checked = view.IsFlip;
                         checkBoxDinoWorld.Checked = view.IsDino;
                         checkBoxGibbet.Checked = view.IsGibbet;
+                        checkBoxCleaning.Checked = view.IsCleaning;
                     }
                 }
                 catch (Exception ex)

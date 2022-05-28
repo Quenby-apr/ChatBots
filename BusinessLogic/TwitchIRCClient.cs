@@ -23,7 +23,10 @@ namespace ChatBots.BusinessLogic
     {
         [Dependency]
         public IUnityContainer Container { get; set; }
-        private readonly DinoLogic logic;
+        private readonly DinoLogic dinoLogic;
+        private readonly CleaningLogic cleaningLogic;
+        private readonly GibbetLogic gibbetLogic;
+        public Tuple<string, string> gibbetWord { get; private set; }
         private TcpClient client;
         private StreamReader reader;
         public List<string> commands; //сообщения чату
@@ -33,14 +36,18 @@ namespace ChatBots.BusinessLogic
         public string ChannelName { get; private set; }
         private List<bool> botCheckBoxes;
         private readonly int dinoWorldIndex = 2;
+        private readonly int gibbetIndex = 3;
+        private readonly int cleaningIndex = 4;
+        private readonly int gibbetInterval = 300000;
 
-
-        private Dictionary<string, Action<string, TwitchIRCClient>> answers = new Dictionary<string, Action<string, TwitchIRCClient>>();
-        public TwitchIRCClient(string ChannelName, string BotName, string token, List<bool> botFunctions, DinoLogic logic)
+        public Dictionary<string, Action<string, TwitchIRCClient>> answers = new Dictionary<string, Action<string, TwitchIRCClient>>();
+        public TwitchIRCClient(string ChannelName, string BotName, string token, List<bool> botFunctions,
+            DinoLogic dinoLogic, CleaningLogic cleaningLogic, GibbetLogic gibbetLogic)
         {
             botCheckBoxes = botFunctions;
-            this.logic = logic;
-            InitCommands();
+            this.dinoLogic = dinoLogic;
+            this.cleaningLogic = cleaningLogic;
+            this.gibbetLogic = gibbetLogic;
             commands = new List<string>();
             client = new TcpClient(TwitchInit.Host, TwitchInit.Port);
             reader = new StreamReader(client.GetStream());
@@ -48,6 +55,7 @@ namespace ChatBots.BusinessLogic
             this.BotName = BotName;
             this.ChannelName = ChannelName;
             passToken = token;
+            InitCommands();
         }
 
         public void Connect()
@@ -61,9 +69,10 @@ namespace ChatBots.BusinessLogic
 
         public void CheckCommand(string msg)
         {
+            Console.WriteLine(msg);
             foreach (var pair in answers)
             {
-                if (msg.Contains(pair.Key))
+                if (msg.ToLower().Contains(pair.Key))
                 {
                     Task.Run(() =>
                     {
@@ -80,7 +89,7 @@ namespace ChatBots.BusinessLogic
             {
                 string message;
                 while ((message = await reader.ReadLineAsync()) != null && !cancellationToken.IsCancellationRequested)
-                {
+                { 
                     if (message != null)
                     {
                         CheckCommand(message);
@@ -127,13 +136,34 @@ namespace ChatBots.BusinessLogic
         {
             InitSimpleCommands();
             InitDinoWorld();
+            InitGibbet();
+            InitModeration();
         }
-        private void InitDinoWorld()
+
+        private void InitGibbet()
         {
-            
+            if (botCheckBoxes[gibbetIndex])
+            {
+                Task.Run(() => StartGibbet());
+            }
+        }
+
+        private void StartGibbet()
+        {
+            while (true)
+            {
+                gibbetWord = gibbetLogic.GenerateWord();
+                answers.Add(gibbetWord.Item1, gibbetLogic.FinishRound);
+                gibbetLogic.SendWord(this, gibbetWord);
+                Thread.Sleep(gibbetInterval);
+            }
+        }
+
+        private void InitDinoWorld()
+        {      
             if (botCheckBoxes[dinoWorldIndex])
             {
-                var dinoCommands = new DinoCommands(logic);
+                var dinoCommands = new DinoCommands(dinoLogic);
                 answers.Add("!dino new", dinoCommands.CreateDino);
                 answers.Add("!dino dinner", dinoCommands.DoDinner);
                 answers.Add("!dino fruits", dinoCommands.CheckFruits);
@@ -154,6 +184,18 @@ namespace ChatBots.BusinessLogic
             if (botCheckBoxes[1])
             {
                 answers.Add("!flip", simpleCommands.DoFlip);
+            }
+        }
+
+        private void InitModeration()
+        {
+            if (botCheckBoxes[cleaningIndex])
+            {
+                CleaningLogic cleaning = new CleaningLogic();
+                foreach (var element in cleaning.banWords)
+                {
+                    answers.Add(element, cleaning.KickUser);
+                }
             }
         }
     }

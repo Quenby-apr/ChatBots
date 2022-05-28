@@ -18,22 +18,19 @@ namespace ChatBots.BusinessLogic.TwitchCommands
             numbers.RemoveAll(x => x == string.Empty);
             int value;
             Random rnd = new Random();
-            if (int.TryParse(numbers[0], out value) && numbers[0] != int.MaxValue.ToString())
+            if (numbers.Count == 1 && int.TryParse(numbers[0], out value) && numbers[0] != int.MaxValue.ToString())
             {
-                if (numbers.Count == 1)
+                value = rnd.Next(0, int.Parse(numbers[0]) + 1);
+            }
+            else if (numbers.Count == 2 && int.TryParse(numbers[0], out value) && int.TryParse(numbers[1], out value) && numbers[0] != int.MaxValue.ToString() && numbers[1] != int.MaxValue.ToString())
+            {
+                if (int.Parse(numbers[0]) > int.Parse(numbers[1]))
                 {
-                    value = rnd.Next(0, int.Parse(numbers[0]) + 1);
+                    string buf = numbers[1];
+                    numbers[1] = numbers[0];
+                    numbers[0] = buf;
                 }
-                else if (numbers.Count == 2 && int.TryParse(numbers[1], out value) && numbers[1] != int.MaxValue.ToString())
-                {
-                    if (int.Parse(numbers[0]) > int.Parse(numbers[1]))
-                    {
-                        string buf = numbers[1];
-                        numbers[1] = numbers[0];
-                        numbers[0] = buf;
-                    }
-                    value = rnd.Next(int.Parse(numbers[0]), int.Parse(numbers[1]) + 1);
-                }
+                value = rnd.Next(int.Parse(numbers[0]), int.Parse(numbers[1]) + 1);
             }
             else
             {

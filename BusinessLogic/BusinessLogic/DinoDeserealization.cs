@@ -12,14 +12,6 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         public Dinozavr Deserialize(string JSDino)
         {
             string[] dinoParams = JSDino.Split(',');
-            Console.WriteLine(dinoParams[0].Substring(8));
-            Console.WriteLine(dinoParams[1].Substring(9));
-            Console.WriteLine(dinoParams[2].Substring(5));
-            Console.WriteLine(dinoParams[3].Substring(8));
-            Console.WriteLine(dinoParams[5].Substring(8, dinoParams[5].Length - 8 - 1));
-            Console.WriteLine(dinoParams[6].Substring(8));
-            Console.WriteLine(dinoParams[7].Substring(12, dinoParams[7].Length - 12 - 1));
-            Console.WriteLine(dinoParams[8].Substring(5, dinoParams[8].Length - 6));
             if (JSDino.Contains("\"MaxHP\":300"))
             {
                 Herbivore dino = new Herbivore();

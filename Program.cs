@@ -36,6 +36,8 @@ namespace ChatBots
             currentContainer.RegisterType<ChannelLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<DinoLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<UserLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<GibbetLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<CleaningLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<Encoder>(new HierarchicalLifetimeManager());
             return currentContainer;
         }

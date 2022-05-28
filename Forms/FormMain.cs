@@ -20,13 +20,17 @@ namespace ChatBots
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
-        private readonly ChannelLogic logic;
-        private readonly DinoLogic dLogic;
-        public FormMain(ChannelLogic logic, DinoLogic dLogic)
+        private readonly ChannelLogic channelLogic;
+        private readonly DinoLogic dinoLogic;
+        private readonly GibbetLogic gibbetLogic;
+        private readonly CleaningLogic cleaningLogic;
+        public FormMain(ChannelLogic channelLogic, DinoLogic dinoLogic, GibbetLogic gibbetLogic, CleaningLogic cleaningLogic)
         {
             InitializeComponent();
-            this.logic = logic;
-            this.dLogic = dLogic;
+            this.channelLogic = channelLogic;
+            this.dinoLogic = dinoLogic;
+            this.gibbetLogic = gibbetLogic;
+            this.cleaningLogic = cleaningLogic;
         }
 
         private void buttonAddTwitch_Click(object sender, EventArgs e)
@@ -38,7 +42,7 @@ namespace ChatBots
 
         private void buttonDeleteTwitch_Click(object sender, EventArgs e)
         {
-            logic.Delete(new ChannelModel
+            channelLogic.Delete(new ChannelModel
             {
                 ChannelName = ((ChannelModel)listBoxTwitch.SelectedValue).ChannelName,
                 Type = "Twitch"
@@ -100,7 +104,7 @@ namespace ChatBots
             }
             try
             {
-                var listT = logic.Read(new ChannelModel
+                var listT = channelLogic.Read(new ChannelModel
                 {
                     Type = "Twitch",
                     UserName = Program.User.Login
@@ -110,7 +114,7 @@ namespace ChatBots
                 {
                     listBoxTwitch.DataSource = listT;
                 }
-                var listD = logic.Read(new ChannelModel
+                var listD = channelLogic.Read(new ChannelModel
                 {
                     Type = "Discord",
                     UserName = Program.User.Login
@@ -130,7 +134,7 @@ namespace ChatBots
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            var listT = logic.Read(new ChannelModel
+            var listT = channelLogic.Read(new ChannelModel
             {
                 Type = "Twitch",
                 UserName = Program.User.Login
@@ -142,13 +146,11 @@ namespace ChatBots
                     twitchChannel.IsRoll,
                     twitchChannel.IsFlip,
                     twitchChannel.IsDino,
-                    twitchChannel.IsGibbet
+                    twitchChannel.IsGibbet,
+                    twitchChannel.IsCleaning
                 };
-                TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName,
-                "Quenby_Bot",
-                twitchChannel.Token,
-                botFunctions,
-                dLogic);
+                TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot",twitchChannel.Token,
+                    botFunctions, dinoLogic, cleaningLogic, gibbetLogic);
                 client.Connect();
                 CancellationTokenSource cancellation = new CancellationTokenSource();
                 Task.Run(() => client.Chat(cancellation.Token));
