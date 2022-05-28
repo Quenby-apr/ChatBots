@@ -8,7 +8,6 @@ namespace ChatBots.BusinessLogic.Models
 {
     public abstract class Dinozavr
     {
-        //добавить твич/дискорд для динозавра
         public string UserName { get; set; }
         public string DiscordID { get; set; }
         public string Name { get; set; }

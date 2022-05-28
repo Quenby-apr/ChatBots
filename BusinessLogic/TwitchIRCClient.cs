@@ -24,7 +24,6 @@ namespace ChatBots.BusinessLogic
         [Dependency]
         public IUnityContainer Container { get; set; }
         private readonly DinoLogic dinoLogic;
-        private readonly CleaningLogic cleaningLogic;
         private readonly GibbetLogic gibbetLogic;
         public Tuple<string, string> gibbetWord { get; private set; }
         private TcpClient client;
@@ -42,20 +41,19 @@ namespace ChatBots.BusinessLogic
 
         public Dictionary<string, Action<string, TwitchIRCClient>> answers = new Dictionary<string, Action<string, TwitchIRCClient>>();
         public TwitchIRCClient(string ChannelName, string BotName, string token, List<bool> botFunctions,
-            DinoLogic dinoLogic, CleaningLogic cleaningLogic, GibbetLogic gibbetLogic)
+            DinoLogic dinoLogic, GibbetLogic gibbetLogic)
         {
             botCheckBoxes = botFunctions;
             this.dinoLogic = dinoLogic;
-            this.cleaningLogic = cleaningLogic;
             this.gibbetLogic = gibbetLogic;
             commands = new List<string>();
             client = new TcpClient(TwitchInit.Host, TwitchInit.Port);
             reader = new StreamReader(client.GetStream());
             writer = new StreamWriter(client.GetStream());
+            InitCommands();
             this.BotName = BotName;
             this.ChannelName = ChannelName;
-            passToken = token;
-            InitCommands();
+            passToken = token;         
         }
 
         public void Connect()

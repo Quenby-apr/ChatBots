@@ -32,7 +32,17 @@ namespace ChatBots.BusinessLogic.BusinessLogic
 
             if (!string.IsNullOrEmpty(model.UserName))
             {
-                string dinoName = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
+                string dinoName = Task.Run(() => _dinoWorldStorage.GetElementTwitchOwnerAsync(model)).Result;
+                if (dinoName == null)
+                {
+                    return new List<Dinozavr>();
+                }
+                dinos.Add(Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(dinoName)).Result);
+            }
+
+            if (!string.IsNullOrEmpty(model.DiscordID))
+            {
+                string dinoName = Task.Run(() => _dinoWorldStorage.GetElementDiscordOwnerAsync(model)).Result;
                 if (dinoName == null)
                 {
                     return new List<Dinozavr>();
@@ -43,10 +53,16 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         }
         public string CreateDino(Dinozavr model)
         {
-            string dinoName = Task.Run(() => _dinoWorldStorage.GetElementOwnerAsync(model)).Result;
+            string dinoName = Task.Run(() => _dinoWorldStorage.GetElementTwitchOwnerAsync(model)).Result;
+            var element = Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(model.Name)).Result;
+            if (dinoName != null && element.DiscordID == null && model.DiscordID != null)
+            {
+                _dinoWorldStorage.UpdateAsync(model);
+                return "Привязка динозавра прошла успешно "+ Emotion.emotions["joy"];
+            }
             if (dinoName != null)
                 return "У вас уже есть динозавр"; //на 1 человека 1 динозавр, в будущем можно будет убрать
-            var element = Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(model.Name)).Result;
+ 
             if (element != null)
             {
                 return "Динозавр с таким именем уже существует";
@@ -110,11 +126,11 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 {
                     if (i > model.Level)
                     {
-                        return model.UserName + ", у вашего динозавра сейчас " + model.Level + " уровень и заработано " + model.XP + " опыта, вы уже можете поднять свой уровень!";
+                        return model.UserName + ", у " + model.Name + " сейчас " + model.Level + " уровень и заработано " + model.XP + " опыта, вы уже можете поднять свой уровень!";
                     }
                     else
                     {
-                        return model.UserName + ", у вашего динозавра сейчас " + model.Level + " уровень и заработано " + model.XP + " опыта, до следующего уровня не хватает " + (Dinozavr.levels[i] - model.XP) + " опыта";
+                        return model.UserName + ", у " + model.Name + " сейчас " + model.Level + " уровень и заработано " + model.XP + " опыта, до следующего уровня не хватает " + (Dinozavr.levels[i] - model.XP) + " опыта";
                     }
                 }
             }
@@ -131,7 +147,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                     {
                         model.Level++;
                         _dinoWorldStorage.UpdateAsync(model);
-                        return model.UserName + ", поздравляю, ваш динозавр стал " + model.Level + " уровня " + Emotion.emotions["joy"];
+                        return model.UserName + ", поздравляю, " + model.Name + " стал " + model.Level + " уровня " + Emotion.emotions["joy"];
                     }
                     else
                     {
@@ -167,7 +183,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                         model.HP = model.MaxHP;
                     }
                     Task.Run(() => _dinoWorldStorage.UpdateAsync(model));
-                    return model.UserName + ", ваш динозавр смог найти замечательный фрукт, поэтому восполнил себе здоровье! А также получил " + xp + " опыта " + Emotion.emotions["joy"];
+                    return model.UserName + ", " + model.Name + " смог найти замечательный фрукт, поэтому восполнил себе здоровье! А также получил " + xp + " опыта " + Emotion.emotions["joy"];
                 }
                 else
                 {
@@ -222,7 +238,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                         Task.Run(() => _dinoWorldStorage.DeleteOwnerAsync(prey));
                         return "Динозавра " + prey.Name + "больше нет с нами " + Emotion.emotions["sadness"];
                     }
-                    return model.UserName + ", ваш динозавр смог съесть динозавра " + prey.Name + "! Он восполнил себе немножко здоровья и получил " + xp + " опыта " + Emotion.emotions["predator"];
+                    return model.UserName + ", " + model.Name + " смог съесть динозавра " + prey.Name + "! Он восполнил себе немножко здоровья и получил " + xp + " опыта " + Emotion.emotions["predator"];
                 }
                 else
                 {
@@ -235,7 +251,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                     }
                     model.Busy = false;
                     Task.Run(() => _dinoWorldStorage.UpdateAsync(model));
-                    return model.UserName + ", ваш динозавр не смог поймать динозавра " + prey.Name + "! Но получил " + xp + " опыта " + Emotion.emotions["dropping"];
+                    return model.UserName + ", " + model.Name + " не смог поймать динозавра " + prey.Name + "! Но получил " + xp + " опыта " + Emotion.emotions["dropping"];
                 }
             }
             return "что-то пошло не так";

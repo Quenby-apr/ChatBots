@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using ChatBots.Properties;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,9 +28,7 @@ namespace ChatBots.BusinessLogic
                 .AddSingleton(commands)
                 .BuildServiceProvider();
 
-            string token = "OTU2MTczNTEyOTE2MjA1NTk4.GSlcYg.tqmQ2ewL-JCY2sTRVNyp-dEG_gAq2QDOfPuWi8";
-
-            client.Log += clientLog;
+            string token = Settings.DiscordBotToken;
 
             client.MessageReceived += HandleCommandAsync;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
@@ -40,6 +39,7 @@ namespace ChatBots.BusinessLogic
         private async Task HandleCommandAsync(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
+            Console.WriteLine(message);
             var context = new SocketCommandContext(client, message);
             if (message.Author.IsBot)
                 return;
@@ -48,17 +48,9 @@ namespace ChatBots.BusinessLogic
             if (message.HasStringPrefix("!", ref argPos))
             {
                 var result = await commands.ExecuteAsync(context, argPos, services);
-                if (!result.IsSuccess)
-                    Console.WriteLine(result.ErrorReason);
                 if (result.Error.Equals(CommandError.UnmetPrecondition))
                     await message.Channel.SendMessageAsync(result.ErrorReason);
             }
-        }
-
-        private Task clientLog(LogMessage arg)
-        {
-            Console.WriteLine(arg);
-            return Task.CompletedTask;
         }
     }
 }

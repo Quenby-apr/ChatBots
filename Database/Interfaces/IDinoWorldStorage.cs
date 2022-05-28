@@ -18,7 +18,8 @@ namespace ChatBots.Database.Interfaces
         void DeleteAsync(Dinozavr model);
 
         Task<Dictionary<string, List<string>>> GetFullListOwnerAsync();
-        Task<string> GetElementOwnerAsync(Dinozavr model);
+        Task<string> GetElementTwitchOwnerAsync(Dinozavr model);
+        Task<string> GetElementDiscordOwnerAsync(Dinozavr model);
         void InsertOwnerAsync(Dinozavr model);
         void DeleteOwnerAsync(Dinozavr model);
     }

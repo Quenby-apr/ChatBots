@@ -14,7 +14,7 @@ using Unity;
 
 namespace ChatBots.Forms
 {
-    public partial class TwitchChannelForm : Form
+    public partial class DiscordChannelForm : Form
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
@@ -24,24 +24,11 @@ namespace ChatBots.Forms
             set { nameChan = value; }
         }
         private string nameChan;
-        public TwitchChannelForm(ChannelLogic logic)
+        public DiscordChannelForm(ChannelLogic logic)
         {
             InitializeComponent();
             this.logic = logic;
             Size = new Size(450, 290);
-        }
-
-        private void checkBoxCustomBot_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxCustomBot.Checked == true)
-            {
-                textBoxOAuthToken.Enabled = false;
-                textBoxOAuthToken.Text = Settings.TwitchBotToken;
-            }
-            else 
-            {
-                textBoxOAuthToken.Enabled = true;
-            }
         }
 
         private void buttonTools_Click(object sender, EventArgs e)
@@ -58,34 +45,29 @@ namespace ChatBots.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxOAuthToken.Text))
+            if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxDiscordID.Text))
             {
                 logic.CreateOrUpdate(new ChannelModel
                 {
                     ChannelName = textBoxChannelName.Text,
                     UserName = Program.User.Login,
-                    Token = textBoxOAuthToken.Text,
-                    Default = checkBoxCustomBot.Checked,
+                    DiscordID = textBoxDiscordID.Text,
                     Type = "Twitch",
                     IsRoll = checkBoxRoll.Checked,
                     IsFlip = checkBoxFlip.Checked,
                     IsDino = checkBoxDinoWorld.Checked,
-                    IsGibbet = checkBoxGibbet.Checked,
                     IsCleaning = checkBoxCleaning.Checked
                 });
                 Close();
-            }  
+            }
         }
         private void LoadData()
         {
             if (string.IsNullOrEmpty(nameChan))
             {
-                checkBoxCustomBot.Checked = true;
-                textBoxOAuthToken.Text = Settings.TwitchBotToken;
                 checkBoxRoll.Checked = true;
                 checkBoxFlip.Checked = true;
                 checkBoxDinoWorld.Checked = true;
-                checkBoxGibbet.Checked = true;
                 checkBoxCleaning.Checked = true;
             }
 
@@ -97,13 +79,10 @@ namespace ChatBots.Forms
                     if (view != null)
                     {
                         textBoxChannelName.Text = view.ChannelName;
-                        textBoxChannelName.Enabled = false;
-                        checkBoxCustomBot.Checked = view.Default;
-                        textBoxOAuthToken.Text = view.Token;
+                        textBoxDiscordID.Text = view.DiscordID;
                         checkBoxRoll.Checked = view.IsRoll;
                         checkBoxFlip.Checked = view.IsFlip;
                         checkBoxDinoWorld.Checked = view.IsDino;
-                        checkBoxGibbet.Checked = view.IsGibbet;
                         checkBoxCleaning.Checked = view.IsCleaning;
                     }
                 }

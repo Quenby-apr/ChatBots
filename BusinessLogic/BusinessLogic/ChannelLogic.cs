@@ -72,8 +72,16 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                 }
                 return channelList;
             }
-           
-            //ОБРАБОТКА ДЛЯ ДИСКОРДА
+            if (!string.IsNullOrEmpty(model.DiscordID) && model.Type == "Discord")
+            {
+                List<ChannelModel> result = new List<ChannelModel>();
+                ChannelModel channel = Task.Run(() => _channelStorage.GetElementAsync(model)).Result;
+                if (Program.User.Login == channel.UserName)
+                {
+                    result.Add(channel);
+                }
+                return result;
+            }
             return channelList;
         }
 
@@ -84,7 +92,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
             {
                 throw new Exception("На данном канале бот уже установлен");
             }
-            if (element != null && string.IsNullOrEmpty(model.ChannelName) && (model.Type == "Twitch"))
+            if (element != null && string.IsNullOrEmpty(model.ChannelName))
             {
                 _channelStorage.UpdateAsync(model);
             }

@@ -26,15 +26,17 @@ namespace ChatBots.BusinessLogic.Commands
             var words = msg.Split(' ');
             for (int i =0; i < words.Length; i++)
             {
-                if (words[i] == "!dino" && (i+2 < words.Length))
+                if (words[i] == ":!dino" && (i+2 < words.Length))
                 {
                     dinoName = words[i+2];
+                    Console.WriteLine(dinoName);
                 }
             }
             if (string.IsNullOrEmpty(dinoName))
             {
                 dinoName = userName;
             }
+            Console.WriteLine(dinoName);
             client.SendMessage(_dinoLogic.CreateDino(new Herbivore(userName, dinoName)));
         }
 
@@ -58,18 +60,18 @@ namespace ChatBots.BusinessLogic.Commands
             }
             if (dino.Busy)
             {
-                client.SendMessage(userName + ", ваш динозавр ещё не вернулся, необходимо подождать");
+                client.SendMessage(userName + ", " + dino.Name + " ещё не вернулся, необходимо подождать");
                 return;
             }
             else
             {
                 if (dino is Herbivore)
                 {
-                    client.SendMessage(userName + ", ваш динозавр ушёл за фруктами");
+                    client.SendMessage(userName + ", " + dino.Name + " ушёл за фруктами");
                 }
                 if (dino is Predator)
                 {
-                    client.SendMessage(userName + ", ваш динозавр ушёл на охоту");
+                    client.SendMessage(userName + ", " + dino.Name + " ушёл на охоту");
                 }
                 try
                 {
@@ -100,7 +102,7 @@ namespace ChatBots.BusinessLogic.Commands
             if (dino is Herbivore)
             {
                 var param = (Herbivore)dino;
-                client.SendMessage(userName + ", за всё время ваш динозавр нашёл " + param.Fruits + " фруктов");
+                client.SendMessage(userName + ", за всё время " + dino.Name + " нашёл " + param.Fruits + " фруктов");
             }
             else
             {
@@ -128,7 +130,7 @@ namespace ChatBots.BusinessLogic.Commands
             if (dino is Predator)
             {
                 var param = (Predator)dino;
-                client.SendMessage(userName + ", за всё время ваш динозавр поймал " + param.Preys + " других динозавров");
+                client.SendMessage(userName + ", за всё время " + dino.Name + " поймал " + param.Preys + " других динозавров");
             }
             else
             {
@@ -193,7 +195,7 @@ namespace ChatBots.BusinessLogic.Commands
             {
                 dino = dinos[0];
             }
-            client.SendMessage(userName + ", у вашего динозавра сейчас " + dino.HP + " здоровья");
+            client.SendMessage(userName + ", у " + dino.Name + " сейчас " + dino.HP + " здоровья");
         }
 
         public void KillDino(string msg, TwitchIRCClient client)

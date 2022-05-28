@@ -82,20 +82,30 @@ namespace ChatBots.Database.Implementations
             return response.ResultAs<Dictionary<string, List<string>>>();
         }
 
-        public async Task<string> GetElementOwnerAsync(Dinozavr model)
+        public async Task<string> GetElementTwitchOwnerAsync(Dinozavr model)
         {
             FirebaseResponse response = await db.client.GetAsync("Owners/" + model.UserName);
             return response.ResultAs<string>();
         }
 
+        public async Task<string> GetElementDiscordOwnerAsync(Dinozavr model)
+        {
+            FirebaseResponse response = await db.client.GetAsync("Owners/" + model.DiscordID);
+            return response.ResultAs<string>();
+        }
+
         public async void InsertOwnerAsync(Dinozavr model)
         {
-            await db.client.SetAsync("Owners/" + model.UserName, model.Name);
+            if (model.UserName != null)
+                await db.client.SetAsync("Owners/" + model.UserName, model.Name);
+            if (model.DiscordID != null)
+                await db.client.SetAsync("Owners/" + model.DiscordID, model.Name);
         }
 
         public async void DeleteOwnerAsync(Dinozavr model)
         {
             await db.client.DeleteAsync("Owners/" + model.UserName);
+            await db.client.DeleteAsync("Owners/" + model.DiscordID);
         }
     }
 }

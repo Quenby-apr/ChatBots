@@ -25,6 +25,7 @@ namespace ChatBots.Properties {
 
         public readonly static string AuthSecretFirebase = "QEko1K97XZMZtzKKhc77Eh8EmAXwGEUSxtpie53H";
         public readonly static string FirebasePath = "https://dinoworld-474aa-default-rtdb.europe-west1.firebasedatabase.app/";
-        public readonly static string BotToken = "oauth:pembvf5gu1s816155ssjvta03qkn8u";
+        public readonly static string TwitchBotToken = "oauth:pembvf5gu1s816155ssjvta03qkn8u";
+        public readonly static string DiscordBotToken = "OTU2MTczNTEyOTE2MjA1NTk4.GSlcYg.tqmQ2ewL-JCY2sTRVNyp-dEG_gAq2QDOfPuWi8";
     }
 }

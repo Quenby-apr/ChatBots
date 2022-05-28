@@ -137,6 +137,8 @@ namespace ChatBots
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
+            DiscordClient disc = new DiscordClient();
+            disc.RunBotAsync().GetAwaiter().GetResult();
             buttonConnect.Enabled = false;
             var listT = channelLogic.Read(new ChannelModel
             {
@@ -154,11 +156,12 @@ namespace ChatBots
                     twitchChannel.IsCleaning
                 };
                 TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot",twitchChannel.Token,
-                    botFunctions, dinoLogic, cleaningLogic, gibbetLogic);
+                    botFunctions, dinoLogic, gibbetLogic);
                 client.Connect();
                 Task.Run(() => client.Chat(cancellation.Token));
                 Task.Run(() => client.InitGibbet(cancellation.Token));
             }
         }
+
     }
 }
