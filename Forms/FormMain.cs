@@ -24,6 +24,7 @@ namespace ChatBots
         private readonly DinoLogic dinoLogic;
         private readonly GibbetLogic gibbetLogic;
         private readonly CleaningLogic cleaningLogic;
+        CancellationTokenSource cancellation;
         public FormMain(ChannelLogic channelLogic, DinoLogic dinoLogic, GibbetLogic gibbetLogic, CleaningLogic cleaningLogic)
         {
             InitializeComponent();
@@ -31,6 +32,7 @@ namespace ChatBots
             this.dinoLogic = dinoLogic;
             this.gibbetLogic = gibbetLogic;
             this.cleaningLogic = cleaningLogic;
+            cancellation = new CancellationTokenSource();
         }
 
         private void buttonAddTwitch_Click(object sender, EventArgs e)
@@ -87,6 +89,7 @@ namespace ChatBots
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            cancellation.Cancel();         
             if (Program.User != null)
             {
                 Application.Exit();
@@ -134,6 +137,7 @@ namespace ChatBots
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
+            buttonConnect.Enabled = false;
             var listT = channelLogic.Read(new ChannelModel
             {
                 Type = "Twitch",
@@ -152,8 +156,8 @@ namespace ChatBots
                 TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot",twitchChannel.Token,
                     botFunctions, dinoLogic, cleaningLogic, gibbetLogic);
                 client.Connect();
-                CancellationTokenSource cancellation = new CancellationTokenSource();
                 Task.Run(() => client.Chat(cancellation.Token));
+                Task.Run(() => client.InitGibbet(cancellation.Token));
             }
         }
     }

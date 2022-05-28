@@ -89,7 +89,7 @@ namespace ChatBots.BusinessLogic
             {
                 string message;
                 while ((message = await reader.ReadLineAsync()) != null && !cancellationToken.IsCancellationRequested)
-                { 
+                {
                     if (message != null)
                     {
                         CheckCommand(message);
@@ -100,6 +100,7 @@ namespace ChatBots.BusinessLogic
                         }
                     }
                 }
+
             }
             catch (ObjectDisposedException)
             {
@@ -136,26 +137,20 @@ namespace ChatBots.BusinessLogic
         {
             InitSimpleCommands();
             InitDinoWorld();
-            InitGibbet();
             InitModeration();
         }
 
-        private void InitGibbet()
+        public void InitGibbet(CancellationToken cancellationToken)
         {
             if (botCheckBoxes[gibbetIndex])
             {
-                Task.Run(() => StartGibbet());
-            }
-        }
-
-        private void StartGibbet()
-        {
-            while (true)
-            {
-                gibbetWord = gibbetLogic.GenerateWord();
-                answers.Add(gibbetWord.Item1, gibbetLogic.FinishRound);
-                gibbetLogic.SendWord(this, gibbetWord);
-                Thread.Sleep(gibbetInterval);
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    gibbetWord = gibbetLogic.GenerateWord();
+                    answers.Add(gibbetWord.Item1, gibbetLogic.FinishRound);
+                    gibbetLogic.SendWord(this, gibbetWord, cancellationToken);
+                    Thread.Sleep(gibbetInterval);
+                }
             }
         }
 

@@ -19,7 +19,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
             cancellationToken = cancellationTokenSource.Token;
         }
 
-        public void SendWord(TwitchIRCClient client, Tuple<string,string> word)
+        public void SendWord(TwitchIRCClient client, Tuple<string,string> word, CancellationToken cancellation)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -29,14 +29,14 @@ namespace ChatBots.BusinessLogic.BusinessLogic
             SendDescription(client, word.Item2);
             Thread.Sleep(gibbetLetter);
             
-            if (!cancellationToken.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested && !cancellation.IsCancellationRequested)
             {
                 var hiddenWord = HideWord(word.Item1);
                 client.SendMessage(hiddenWord + " ("+hiddenWord.Length+" букв)");
                 Thread.Sleep(gibbetLetter);
                 for (int i = 0; i < 3; i++)
                 {
-                    if (cancellationToken.IsCancellationRequested)
+                    if (cancellationToken.IsCancellationRequested && !cancellation.IsCancellationRequested)
                     {
                         return;
                     }
@@ -44,7 +44,7 @@ namespace ChatBots.BusinessLogic.BusinessLogic
                     client.SendMessage(hiddenWord);
                     Thread.Sleep(gibbetLetter);
                 }
-                if (!cancellationToken.IsCancellationRequested)
+                if (!cancellationToken.IsCancellationRequested && !cancellation.IsCancellationRequested)
                     client.SendMessage("К сожалению, никто не отгадал, правильное слово: " + word.Item1);
             } 
         }
