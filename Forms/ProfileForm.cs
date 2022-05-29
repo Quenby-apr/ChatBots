@@ -26,7 +26,8 @@ namespace ChatBots.Forms
                 return;
             }
             var oldUser = logic.Read(new UserViewModel(){
-                Login = Program.User.Login
+                Login = Program.User.Login,
+                Password =textBoxPassword.Text
             })[0];
             logic.Update(new UserViewModel
             {

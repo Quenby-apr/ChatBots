@@ -53,10 +53,14 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         }
         public string CreateDino(Dinozavr model)
         {
-            string dinoName = Task.Run(() => _dinoWorldStorage.GetElementTwitchOwnerAsync(model)).Result;
-            string discordDino = Task.Run(() => _dinoWorldStorage.GetElementDiscordOwnerAsync(model)).Result;
+            string dinoName = null; 
+            string discordDino = null;
+            if (model.UserName != null)
+                dinoName = Task.Run(() => _dinoWorldStorage.GetElementTwitchOwnerAsync(model)).Result;
+            if (model.DiscordID != null)
+                discordDino = Task.Run(() => _dinoWorldStorage.GetElementDiscordOwnerAsync(model)).Result;
             var element = Task.Run(() => _dinoWorldStorage.GetElementByNameAsync(model.Name)).Result;
-            if (dinoName != null && element.DiscordID == null && model.DiscordID != null)
+            if (dinoName != null && discordDino == null && model.DiscordID != null && element.DiscordID == null)
             {
                 element.DiscordID = model.DiscordID;
                 _dinoWorldStorage.UpdateAsync(element);
