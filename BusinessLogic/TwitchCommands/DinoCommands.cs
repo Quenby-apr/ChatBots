@@ -37,7 +37,7 @@ namespace ChatBots.BusinessLogic.Commands
                 dinoName = userName;
             }
             Console.WriteLine(dinoName);
-            client.SendMessage(_dinoLogic.CreateDino(new Herbivore(userName, dinoName)));
+            client.SendMessage(userName + ", " + _dinoLogic.CreateDino(new Herbivore(userName, dinoName)));
         }
 
         public void DoDinner(string msg, TwitchIRCClient client)
@@ -51,7 +51,7 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
@@ -79,7 +79,7 @@ namespace ChatBots.BusinessLogic.Commands
                 }
                 catch { }
             }
-            client.SendMessage(answer);
+            client.SendMessage(userName + ", " + answer);
         }
 
         public void CheckFruits(string msg, TwitchIRCClient client)
@@ -92,7 +92,7 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
@@ -120,7 +120,7 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
@@ -148,14 +148,14 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
             {
                 dino = dinos[0];
             }
-            client.SendMessage(_dinoLogic.UpLvl(dino));
+            client.SendMessage(userName + ", " + _dinoLogic.UpLvl(dino));
         }
 
         public void CheckLvl(string msg, TwitchIRCClient client)
@@ -168,14 +168,14 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
             {
                 dino = dinos[0];
             }
-            client.SendMessage(_dinoLogic.GetLvl(dino));
+            client.SendMessage(userName + ", " + _dinoLogic.GetLvl(dino));
         }
 
         public void CheckHP(string msg, TwitchIRCClient client)
@@ -188,7 +188,7 @@ namespace ChatBots.BusinessLogic.Commands
             });
             if (dinos.Count() == 0)
             {
-                needNewDino(userName, client);
+                NeedNewDino(userName, client);
                 return;
             }
             else
@@ -212,11 +212,11 @@ namespace ChatBots.BusinessLogic.Commands
             }
             else
             {
-                client.SendMessage(_dinoLogic.KillDino(dinos[0]));
+                client.SendMessage(userName + ", " + _dinoLogic.KillDino(dinos[0]));
             }
         }
 
-        private void needNewDino(string userName, TwitchIRCClient client)
+        private void NeedNewDino(string userName, TwitchIRCClient client)
         {
             client.SendMessage(userName + ", вам нужен свой личный динозавр! " + Emotion.emotions["dinoStandart"]);
         }

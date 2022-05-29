@@ -1,30 +1,24 @@
 ﻿using ChatBots.BusinessLogic.BusinessLogic;
 using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatBots.BusinessLogic.DiscordCommands
 {
-    public class SimpleCommands : ModuleBase<SocketCommandContext>
+    public class SimpleCommands
     {
         private SimpleCommandLogic logic = new SimpleCommandLogic();
 
-        [Command("roll")]
-        public async Task DoRoll()
+        public void DoRoll(SocketCommandContext context)
         {
-            var user = Context.User;
-            var message = Context.Message;
-            await ReplyAsync(logic.DoRoll(message.ToString(), user.Username));
+            var user = context.User;
+            var message = context.Message.Content;
+            context.Message.Channel.SendMessageAsync(logic.DoRoll(message, user.Username));
         }
 
-        [Command("flip")]
-        public async Task DoFlip()
+        public void DoFlip(SocketCommandContext context)
         {
-            var user = Context.User;
-            await ReplyAsync(logic.DoFlip(user.Username));
+            var user = context.User;
+            context.Message.Channel.SendMessageAsync(logic.DoFlip(user.Username));
         }
     }
 }

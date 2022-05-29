@@ -38,6 +38,7 @@
             this.checkBoxFlip = new System.Windows.Forms.CheckBox();
             this.checkBoxDinoWorld = new System.Windows.Forms.CheckBox();
             this.checkBoxCleaning = new System.Windows.Forms.CheckBox();
+            this.labelError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelChannelName
@@ -73,7 +74,6 @@
             this.textBoxDiscordID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxDiscordID.Location = new System.Drawing.Point(12, 132);
             this.textBoxDiscordID.Name = "textBoxDiscordID";
-            this.textBoxDiscordID.ReadOnly = true;
             this.textBoxDiscordID.Size = new System.Drawing.Size(271, 20);
             this.textBoxDiscordID.TabIndex = 4;
             // 
@@ -141,12 +141,22 @@
             this.checkBoxCleaning.Text = "Удаление банвордов";
             this.checkBoxCleaning.UseVisualStyleBackColor = true;
             // 
+            // labelError
+            // 
+            this.labelError.AutoSize = true;
+            this.labelError.ForeColor = System.Drawing.Color.Red;
+            this.labelError.Location = new System.Drawing.Point(12, 78);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(0, 13);
+            this.labelError.TabIndex = 12;
+            // 
             // DiscordChannelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
-            this.ClientSize = new System.Drawing.Size(584, 251);
+            this.ClientSize = new System.Drawing.Size(304, 251);
+            this.Controls.Add(this.labelError);
             this.Controls.Add(this.checkBoxCleaning);
             this.Controls.Add(this.checkBoxDinoWorld);
             this.Controls.Add(this.checkBoxFlip);
@@ -159,7 +169,7 @@
             this.Controls.Add(this.labelChannelName);
             this.Name = "DiscordChannelForm";
             this.Text = "ChannelForm";
-            this.Load += new System.EventHandler(this.TwitchChannelForm_Load);
+            this.Load += new System.EventHandler(this.DiscordChannelForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,5 +187,6 @@
         private System.Windows.Forms.CheckBox checkBoxFlip;
         private System.Windows.Forms.CheckBox checkBoxDinoWorld;
         private System.Windows.Forms.CheckBox checkBoxCleaning;
+        private System.Windows.Forms.Label labelError;
     }
 }

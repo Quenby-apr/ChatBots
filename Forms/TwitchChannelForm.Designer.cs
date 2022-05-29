@@ -40,6 +40,7 @@
             this.checkBoxDinoWorld = new System.Windows.Forms.CheckBox();
             this.checkBoxGibbet = new System.Windows.Forms.CheckBox();
             this.checkBoxCleaning = new System.Windows.Forms.CheckBox();
+            this.labelError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelChannelName
@@ -165,12 +166,22 @@
             this.checkBoxCleaning.Text = "Удаление банвордов";
             this.checkBoxCleaning.UseVisualStyleBackColor = true;
             // 
+            // labelError
+            // 
+            this.labelError.AutoSize = true;
+            this.labelError.ForeColor = System.Drawing.Color.Red;
+            this.labelError.Location = new System.Drawing.Point(15, 68);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(0, 13);
+            this.labelError.TabIndex = 12;
+            // 
             // TwitchChannelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(584, 251);
+            this.Controls.Add(this.labelError);
             this.Controls.Add(this.checkBoxCleaning);
             this.Controls.Add(this.checkBoxGibbet);
             this.Controls.Add(this.checkBoxDinoWorld);
@@ -205,5 +216,6 @@
         private System.Windows.Forms.CheckBox checkBoxDinoWorld;
         private System.Windows.Forms.CheckBox checkBoxGibbet;
         private System.Windows.Forms.CheckBox checkBoxCleaning;
+        private System.Windows.Forms.Label labelError;
     }
 }

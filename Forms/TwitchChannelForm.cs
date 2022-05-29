@@ -3,12 +3,8 @@ using ChatBots.BusinessLogic.Models;
 using ChatBots.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 
@@ -18,16 +14,18 @@ namespace ChatBots.Forms
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
-        private readonly ChannelLogic logic;
+        private readonly ChannelLogic channelLogic;
+        private readonly UserLogic userLogic;
         public string NameChan
         {
             set { nameChan = value; }
         }
         private string nameChan;
-        public TwitchChannelForm(ChannelLogic logic)
+        public TwitchChannelForm(ChannelLogic channelLogic, UserLogic userLogic)
         {
             InitializeComponent();
-            this.logic = logic;
+            this.channelLogic = channelLogic;
+            this.userLogic = userLogic;
             Size = new Size(450, 290);
         }
 
@@ -58,23 +56,45 @@ namespace ChatBots.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxOAuthToken.Text))
+            try
             {
-                logic.CreateOrUpdate(new ChannelModel
+                if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxOAuthToken.Text))
                 {
-                    ChannelName = textBoxChannelName.Text,
-                    UserName = Program.User.Login,
-                    Token = textBoxOAuthToken.Text,
-                    Default = checkBoxCustomBot.Checked,
-                    Type = "Twitch",
-                    IsRoll = checkBoxRoll.Checked,
-                    IsFlip = checkBoxFlip.Checked,
-                    IsDino = checkBoxDinoWorld.Checked,
-                    IsGibbet = checkBoxGibbet.Checked,
-                    IsCleaning = checkBoxCleaning.Checked
-                });
-                Close();
-            }  
+                    channelLogic.CreateOrUpdate(new ChannelModel
+                    {
+                        ChannelName = textBoxChannelName.Text,
+                        UserName = Program.User.Login,
+                        Token = textBoxOAuthToken.Text,
+                        Default = checkBoxCustomBot.Checked,
+                        Type = "Twitch",
+                        IsRoll = checkBoxRoll.Checked,
+                        IsFlip = checkBoxFlip.Checked,
+                        IsDino = checkBoxDinoWorld.Checked,
+                        IsGibbet = checkBoxGibbet.Checked,
+                        IsCleaning = checkBoxCleaning.Checked
+                    });
+                    List<string> channels = new List<string>();
+                    if (Program.User.TwitchChannelNames != null)
+                        channels = Program.User.TwitchChannelNames.ToList();
+                    channels.Add(textBoxChannelName.Text);
+                    Program.User.TwitchChannelNames = channels.ToArray();
+                    if (string.IsNullOrEmpty(nameChan))
+                    {
+                        userLogic.Update(new UserViewModel()
+                        {
+                            Login = Program.User.Login,
+                            Password = Program.User.Password,
+                            DiscordChannelNames = Program.User.DiscordChannelNames,
+                            TwitchChannelNames = channels.ToArray()
+                        });
+                    }
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                labelError.Text = ex.Message;
+            } 
         }
         private void LoadData()
         {
@@ -93,7 +113,7 @@ namespace ChatBots.Forms
             {
                 try
                 {
-                    var view = logic.Read(new ChannelModel { ChannelName = nameChan, Type = "Twitch" })?[0];
+                    var view = channelLogic.Read(new ChannelModel { ChannelName = nameChan, Type = "Twitch" })?[0];
                     if (view != null)
                     {
                         textBoxChannelName.Text = view.ChannelName;
@@ -106,10 +126,11 @@ namespace ChatBots.Forms
                         checkBoxGibbet.Checked = view.IsGibbet;
                         checkBoxCleaning.Checked = view.IsCleaning;
                     }
+
                 }
                 catch (Exception ex)
                 {
-                    
+                    labelError.Text = ex.Message;
                 }
             }
         }

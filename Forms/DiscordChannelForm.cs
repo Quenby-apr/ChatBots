@@ -1,14 +1,9 @@
 ﻿using ChatBots.BusinessLogic.BusinessLogic;
 using ChatBots.BusinessLogic.Models;
-using ChatBots.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 
@@ -18,17 +13,18 @@ namespace ChatBots.Forms
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
-        private readonly ChannelLogic logic;
+        private readonly ChannelLogic channelLogic;
+        private readonly UserLogic userLogic;
         public string NameChan
         {
             set { nameChan = value; }
         }
         private string nameChan;
-        public DiscordChannelForm(ChannelLogic logic)
+        public DiscordChannelForm(ChannelLogic channelLogic, UserLogic userLogic)
         {
             InitializeComponent();
-            this.logic = logic;
-            Size = new Size(450, 290);
+            this.channelLogic = channelLogic;
+            this.userLogic = userLogic;
         }
 
         private void buttonTools_Click(object sender, EventArgs e)
@@ -45,20 +41,42 @@ namespace ChatBots.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxDiscordID.Text))
+            try
             {
-                logic.CreateOrUpdate(new ChannelModel
+                if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxDiscordID.Text))
                 {
-                    ChannelName = textBoxChannelName.Text,
-                    UserName = Program.User.Login,
-                    DiscordID = textBoxDiscordID.Text,
-                    Type = "Twitch",
-                    IsRoll = checkBoxRoll.Checked,
-                    IsFlip = checkBoxFlip.Checked,
-                    IsDino = checkBoxDinoWorld.Checked,
-                    IsCleaning = checkBoxCleaning.Checked
-                });
-                Close();
+                    channelLogic.CreateOrUpdate(new ChannelModel
+                    {
+                        ChannelName = textBoxChannelName.Text,
+                        UserName = Program.User.Login,
+                        DiscordID = textBoxDiscordID.Text,
+                        Type = "Discord",
+                        IsRoll = checkBoxRoll.Checked,
+                        IsFlip = checkBoxFlip.Checked,
+                        IsDino = checkBoxDinoWorld.Checked,
+                        IsCleaning = checkBoxCleaning.Checked
+                    });
+                    List<string> channels = new List<string>();
+                    if (Program.User.DiscordChannelNames != null)
+                        channels = Program.User.DiscordChannelNames.ToList();
+                    channels.Add(textBoxChannelName.Text);
+                    Program.User.DiscordChannelNames = channels.ToArray();
+                    if (string.IsNullOrEmpty(nameChan))
+                    {
+                        userLogic.Update(new UserViewModel()
+                        {
+                            Login = Program.User.Login,
+                            Password = Program.User.Password,
+                            DiscordChannelNames = channels.ToArray(),
+                            TwitchChannelNames = Program.User.TwitchChannelNames
+                        });
+                    }
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                labelError.Text = ex.Message;
             }
         }
         private void LoadData()
@@ -75,7 +93,7 @@ namespace ChatBots.Forms
             {
                 try
                 {
-                    var view = logic.Read(new ChannelModel { ChannelName = nameChan, Type = "Twitch" })?[0];
+                    var view = channelLogic.Read(new ChannelModel { ChannelName = nameChan, Type = "Discord" })?[0];
                     if (view != null)
                     {
                         textBoxChannelName.Text = view.ChannelName;
@@ -88,12 +106,12 @@ namespace ChatBots.Forms
                 }
                 catch (Exception ex)
                 {
-                    
+                    labelError.Text = ex.Message;
                 }
             }
         }
 
-        private void TwitchChannelForm_Load(object sender, EventArgs e)
+        private void DiscordChannelForm_Load(object sender, EventArgs e)
         {
             LoadData();
         }

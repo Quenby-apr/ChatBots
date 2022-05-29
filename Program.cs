@@ -16,6 +16,7 @@ namespace ChatBots
     public static class Program
     {
         public static UserViewModel User { get; set; }
+        public static bool IsDiscordConnect { get; set; }
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>

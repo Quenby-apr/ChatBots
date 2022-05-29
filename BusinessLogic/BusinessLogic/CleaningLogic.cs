@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Discord.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace ChatBots.BusinessLogic.BusinessLogic
         {
             string userName = client.getUserName(msg);
             client.SendMessage(string.Format("/timeout {0} {1}", userName, banSeconds));
+        }
+
+        public void KickUser(SocketCommandContext context)
+        {
+            context.Message.DeleteAsync();
         }
     }
 }

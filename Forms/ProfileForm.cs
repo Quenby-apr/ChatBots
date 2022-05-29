@@ -1,13 +1,6 @@
 ﻿using ChatBots.BusinessLogic.BusinessLogic;
 using ChatBots.BusinessLogic.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 
@@ -27,20 +20,20 @@ namespace ChatBots.Forms
         private void buttonSave_Click(object sender, EventArgs e)
         {
             clearForm();
-            if (string.IsNullOrEmpty(textBoxLogin.Text))
-            {
-                labelLoginError.Visible = true;
-                return;
-            }
             if (string.IsNullOrEmpty(textBoxPassword.Text))
             {
                 labelPassword1Error.Visible = true;
                 return;
             }
+            var oldUser = logic.Read(new UserViewModel(){
+                Login = Program.User.Login
+            })[0];
             logic.Update(new UserViewModel
             {
                 Login = textBoxLogin.Text,
                 Password = textBoxPassword.Text,
+                TwitchChannelNames = oldUser.TwitchChannelNames,
+                DiscordChannelNames = oldUser.DiscordChannelNames
             });
             Close();
         }
@@ -67,7 +60,6 @@ namespace ChatBots.Forms
         {
             if (checkBoxChange.Checked == true)
             {
-                textBoxLogin.Enabled = true;
                 textBoxPassword.Enabled = true;
             }
             if (checkBoxChange.Checked == false)
@@ -77,7 +69,6 @@ namespace ChatBots.Forms
         }
         private void clearForm()
         {
-            labelLoginError.Visible = false;
             labelPassword1Error.Visible = false;
         }
 

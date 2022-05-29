@@ -33,7 +33,6 @@
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.labelPassword = new System.Windows.Forms.Label();
             this.checkBoxChange = new System.Windows.Forms.CheckBox();
-            this.labelLoginError = new System.Windows.Forms.Label();
             this.labelPassword1Error = new System.Windows.Forms.Label();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -44,6 +43,7 @@
             // 
             this.textBoxLogin.BackColor = System.Drawing.Color.PowderBlue;
             this.textBoxLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxLogin.Enabled = false;
             this.textBoxLogin.Location = new System.Drawing.Point(27, 88);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(211, 20);
@@ -86,18 +86,6 @@
             this.checkBoxChange.Text = "Изменить данные";
             this.checkBoxChange.UseVisualStyleBackColor = true;
             this.checkBoxChange.CheckedChanged += new System.EventHandler(this.checkBoxChange_CheckedChanged);
-            // 
-            // labelLoginError
-            // 
-            this.labelLoginError.AutoSize = true;
-            this.labelLoginError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelLoginError.ForeColor = System.Drawing.Color.Red;
-            this.labelLoginError.Location = new System.Drawing.Point(24, 121);
-            this.labelLoginError.Name = "labelLoginError";
-            this.labelLoginError.Size = new System.Drawing.Size(143, 13);
-            this.labelLoginError.TabIndex = 9;
-            this.labelLoginError.Text = "Поле логина не заполнено";
-            this.labelLoginError.Visible = false;
             // 
             // labelPassword1Error
             // 
@@ -157,7 +145,6 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelPassword1Error);
-            this.Controls.Add(this.labelLoginError);
             this.Controls.Add(this.checkBoxChange);
             this.Controls.Add(this.labelPassword);
             this.Controls.Add(this.textBoxPassword);
@@ -178,7 +165,6 @@
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.CheckBox checkBoxChange;
-        private System.Windows.Forms.Label labelLoginError;
         private System.Windows.Forms.Label labelPassword1Error;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonCancel;

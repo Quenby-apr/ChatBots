@@ -96,10 +96,10 @@ namespace ChatBots.Database.Implementations
 
         public async void InsertOwnerAsync(Dinozavr model)
         {
-            if (model.UserName != null)
-                await db.client.SetAsync("Owners/" + model.UserName, model.Name);
             if (model.DiscordID != null)
                 await db.client.SetAsync("Owners/" + model.DiscordID, model.Name);
+            else if (model.UserName != null)
+                await db.client.SetAsync("Owners/" + model.UserName, model.Name);
         }
 
         public async void DeleteOwnerAsync(Dinozavr model)

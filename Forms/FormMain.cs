@@ -4,11 +4,7 @@ using ChatBots.BusinessLogic.Models;
 using ChatBots.Forms;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,14 +20,16 @@ namespace ChatBots
         private readonly DinoLogic dinoLogic;
         private readonly GibbetLogic gibbetLogic;
         private readonly CleaningLogic cleaningLogic;
+        private readonly UserLogic userLogic;
         CancellationTokenSource cancellation;
-        public FormMain(ChannelLogic channelLogic, DinoLogic dinoLogic, GibbetLogic gibbetLogic, CleaningLogic cleaningLogic)
+        public FormMain(ChannelLogic channelLogic, DinoLogic dinoLogic, GibbetLogic gibbetLogic, CleaningLogic cleaningLogic, UserLogic userLogic)
         {
             InitializeComponent();
             this.channelLogic = channelLogic;
             this.dinoLogic = dinoLogic;
             this.gibbetLogic = gibbetLogic;
             this.cleaningLogic = cleaningLogic;
+            this.userLogic = userLogic;
             cancellation = new CancellationTokenSource();
         }
 
@@ -49,6 +47,10 @@ namespace ChatBots
                 ChannelName = ((ChannelModel)listBoxTwitch.SelectedValue).ChannelName,
                 Type = "Twitch"
             });
+            var channels = Program.User.TwitchChannelNames.ToList();
+            channels.Remove(((ChannelModel)listBoxTwitch.SelectedValue).ChannelName);
+            Program.User.TwitchChannelNames = channels.ToArray();
+            userLogic.Update(Program.User);
             LoadData();
         }
 
@@ -62,17 +64,32 @@ namespace ChatBots
 
         private void buttonAddDiscord_Click(object sender, EventArgs e)
         {
-
+            var form = Container.Resolve<DiscordChannelForm>();
+            form.ShowDialog();
+            LoadData();
         }
 
         private void buttonUpdateDiscord_Click(object sender, EventArgs e)
         {
-
+            var form = Container.Resolve<DiscordChannelForm>();
+            form.NameChan = ((ChannelModel)listBoxDiscord.SelectedValue).ChannelName;
+            form.ShowDialog();
+            LoadData();
         }
 
         private void buttonDeleteDiscord_Click(object sender, EventArgs e)
         {
-
+            channelLogic.Delete(new ChannelModel
+            {
+                ChannelName = ((ChannelModel)listBoxTwitch.SelectedValue).ChannelName,
+                Type = "Discord",
+                DiscordID = ((ChannelModel)listBoxTwitch.SelectedValue).DiscordID
+            });
+            var channels = Program.User.TwitchChannelNames.ToList();
+            channels.Remove(((ChannelModel)listBoxTwitch.SelectedValue).ChannelName);
+            Program.User.TwitchChannelNames = channels.ToArray();
+            userLogic.Update(Program.User);
+            LoadData();
         }
 
         private void buttonProfile_Click(object sender, EventArgs e)
@@ -137,17 +154,24 @@ namespace ChatBots
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            DiscordClient disc = new DiscordClient();
-            disc.RunBotAsync().GetAwaiter().GetResult();
-            buttonConnect.Enabled = false;
-            var listT = channelLogic.Read(new ChannelModel
+            try
             {
-                Type = "Twitch",
-                UserName = Program.User.Login
-            });
-            foreach (var twitchChannel in listT)
-            {
-                List<bool> botFunctions = new List<bool>()
+                if (!Program.IsDiscordConnect)
+                {
+                    DiscordClient disc = new DiscordClient(dinoLogic);
+                    disc.RunBotAsync(cancellation.Token).GetAwaiter().GetResult();
+                    Program.IsDiscordConnect = true;
+                }
+
+                buttonConnect.Enabled = false;
+                var listT = channelLogic.Read(new ChannelModel
+                {
+                    Type = "Twitch",
+                    UserName = Program.User.Login
+                });
+                foreach (var twitchChannel in listT)
+                {
+                    List<bool> botFunctions = new List<bool>()
                 {
                     twitchChannel.IsRoll,
                     twitchChannel.IsFlip,
@@ -155,13 +179,17 @@ namespace ChatBots
                     twitchChannel.IsGibbet,
                     twitchChannel.IsCleaning
                 };
-                TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot",twitchChannel.Token,
-                    botFunctions, dinoLogic, gibbetLogic);
-                client.Connect();
-                Task.Run(() => client.Chat(cancellation.Token));
-                Task.Run(() => client.InitGibbet(cancellation.Token));
+                    TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot", twitchChannel.Token,
+                        botFunctions, dinoLogic, gibbetLogic);
+                    client.Connect();
+                    Task.Run(() => client.Chat(cancellation.Token));
+                    Task.Run(() => client.InitGibbet(cancellation.Token));
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
-
     }
 }
