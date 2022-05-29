@@ -25,7 +25,6 @@ namespace ChatBots.Database.Implementations
         {
             FirebaseResponse response = await db.client.GetAsync("Dinozavrs/" + model.Name);
             var resp = response.Body;
-            Console.WriteLine("a tut norm");
             Dinozavr dino = null;
             if (resp != null)
             {
@@ -45,7 +44,6 @@ namespace ChatBots.Database.Implementations
                 dino = myDes.Deserialize(resp);
                 return dino;
             }
-            Console.WriteLine("response NULL");
             return null;
         }
 

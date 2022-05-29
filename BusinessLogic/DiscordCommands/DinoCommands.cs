@@ -30,12 +30,10 @@ namespace ChatBots.BusinessLogic.DiscordCommands
                 if (words[i] == "!dino" && (i + 2 < words.Length))
                 {
                     dinoName = words[i + 2];
-                    Console.WriteLine("имя диза " + dinoName);
                 }
                 if (words[i] == "!dino" && (i + 3 < words.Length))
                 {
                     userName = words[i + 3];
-                    Console.WriteLine("имя хоза " + userName);
                 }
             }
             if (string.IsNullOrEmpty(dinoName))

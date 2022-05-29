@@ -51,7 +51,6 @@ namespace ChatBots.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ошибка");
             }
         }
 

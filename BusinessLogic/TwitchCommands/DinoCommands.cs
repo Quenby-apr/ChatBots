@@ -29,14 +29,12 @@ namespace ChatBots.BusinessLogic.Commands
                 if (words[i] == ":!dino" && (i+2 < words.Length))
                 {
                     dinoName = words[i+2];
-                    Console.WriteLine(dinoName);
                 }
             }
             if (string.IsNullOrEmpty(dinoName))
             {
                 dinoName = userName;
             }
-            Console.WriteLine(dinoName);
             client.SendMessage(userName + ", " + _dinoLogic.CreateDino(new Herbivore(userName, dinoName)));
         }
 

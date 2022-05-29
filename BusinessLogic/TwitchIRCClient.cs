@@ -67,7 +67,6 @@ namespace ChatBots.BusinessLogic
 
         public void CheckCommand(string msg)
         {
-            Console.WriteLine(msg);
             foreach (var pair in answers)
             {
                 if (msg.ToLower().Contains(pair.Key))
