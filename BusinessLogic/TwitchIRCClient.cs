@@ -1,5 +1,6 @@
 ﻿using ChatBots.BusinessLogic.BusinessLogic;
 using ChatBots.BusinessLogic.Commands;
+using ChatBots.BusinessLogic.Models;
 using ChatBots.BusinessLogic.TwitchCommands;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace ChatBots.BusinessLogic
         public IUnityContainer Container { get; set; }
         private readonly DinoLogic dinoLogic;
         private readonly GibbetLogic gibbetLogic;
+        private readonly ChannelLogic channelLogic;
         public Tuple<string, string> gibbetWord { get; private set; }
         private TcpClient client;
         private StreamReader reader;
@@ -41,18 +43,19 @@ namespace ChatBots.BusinessLogic
 
         public Dictionary<string, Action<string, TwitchIRCClient>> answers = new Dictionary<string, Action<string, TwitchIRCClient>>();
         public TwitchIRCClient(string ChannelName, string BotName, string token, List<bool> botFunctions,
-            DinoLogic dinoLogic, GibbetLogic gibbetLogic)
+            DinoLogic dinoLogic, GibbetLogic gibbetLogic, ChannelLogic channelLogic)
         {
             botCheckBoxes = botFunctions;
             this.dinoLogic = dinoLogic;
             this.gibbetLogic = gibbetLogic;
+            this.channelLogic = channelLogic;
             commands = new List<string>();
             client = new TcpClient(TwitchInit.Host, TwitchInit.Port);
             reader = new StreamReader(client.GetStream());
             writer = new StreamWriter(client.GetStream());
-            InitCommands();
             this.BotName = BotName;
             this.ChannelName = ChannelName;
+            InitCommands();
             passToken = token;         
         }
 
@@ -176,6 +179,20 @@ namespace ChatBots.BusinessLogic
             if (botCheckBoxes[1])
             {
                 answers.Add("!flip", simpleCommands.DoFlip);
+            }
+            List<CustomCommand> comms = channelLogic.Read(new ChannelModel()
+            {
+                ChannelName = ChannelName,
+                Type = "Twitch"
+            })[0].CustomCommands;
+            if (comms != null)
+            {
+                foreach (var element in comms)
+                {
+                    answers.Add(element.CommandName, simpleCommands.ExecuteCustomCommand);
+                    simpleCommands.Commands.Add(element.CommandName, element.CommandAnswer);
+                    Console.WriteLine(element.CommandName + "    " + element.CommandAnswer);
+                }
             }
         }
 

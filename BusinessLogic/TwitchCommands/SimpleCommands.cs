@@ -10,7 +10,15 @@ namespace ChatBots.BusinessLogic.TwitchCommands
 {
     public class SimpleCommands
     {
-        private SimpleCommandLogic logic = new SimpleCommandLogic();
+        public Dictionary<string, string> Commands { get; set; }
+
+        private SimpleCommandLogic logic;
+        public SimpleCommands()
+        {
+            Commands = new Dictionary<string, string>();
+            logic = new SimpleCommandLogic();
+        }
+        
         public void DoRoll(string msg, TwitchIRCClient client)
         {
             string userName = client.getUserName(msg);
@@ -23,7 +31,20 @@ namespace ChatBots.BusinessLogic.TwitchCommands
         {
             string userName = client.getUserName(msg);
             client.SendMessage(logic.DoFlip(userName));
+        }
 
+        public void ExecuteCustomCommand(string msg, TwitchIRCClient client)
+        {
+            string answer;
+            foreach(var comm in Commands)
+            {
+                if (msg.Contains(comm.Key)) {
+                    answer = Commands[comm.Key];
+                    client.SendMessage(answer);
+                    return;
+                }
+            }
+            
         }
     }
 }

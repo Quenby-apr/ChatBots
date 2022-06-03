@@ -19,7 +19,7 @@ namespace ChatBots.BusinessLogic.Models
         public bool IsDino { get; set; }
         public bool IsGibbet { get; set; }
         public bool IsCleaning { get; set; }
-
+        public List<CustomCommand> CustomCommands { get; set; }
         public override string ToString()
         {
             return ChannelName;

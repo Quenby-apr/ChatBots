@@ -26,7 +26,7 @@ namespace ChatBots.Forms
             InitializeComponent();
             this.channelLogic = channelLogic;
             this.userLogic = userLogic;
-            Size = new Size(450, 290);
+            Size = new Size(410, 400);
         }
 
         private void checkBoxCustomBot_CheckedChanged(object sender, EventArgs e)
@@ -44,13 +44,13 @@ namespace ChatBots.Forms
 
         private void buttonTools_Click(object sender, EventArgs e)
         {
-            if (Size.Width == 450)
+            if (Size.Width >= 560)
             {
-                Size = new Size(600, 290);
+                Size = new Size(410, 400);
             }
             else
             {
-                Size = new Size(450, 290);
+                Size = new Size(565, 400);
             }
         }
 
@@ -58,6 +58,12 @@ namespace ChatBots.Forms
         {
             try
             {
+                List<CustomCommand> commands = new List<CustomCommand>();
+                foreach (var command in listBoxCommands.Items)
+                {
+                    commands.Add((CustomCommand)command);
+                }
+
                 if (!string.IsNullOrEmpty(textBoxChannelName.Text) && !string.IsNullOrEmpty(textBoxOAuthToken.Text))
                 {
                     channelLogic.CreateOrUpdate(new ChannelModel
@@ -71,7 +77,8 @@ namespace ChatBots.Forms
                         IsFlip = checkBoxFlip.Checked,
                         IsDino = checkBoxDinoWorld.Checked,
                         IsGibbet = checkBoxGibbet.Checked,
-                        IsCleaning = checkBoxCleaning.Checked
+                        IsCleaning = checkBoxCleaning.Checked,
+                        CustomCommands = commands
                     });
                     List<string> channels = new List<string>();
                     if (Program.User.TwitchChannelNames != null)
@@ -125,6 +132,7 @@ namespace ChatBots.Forms
                         checkBoxDinoWorld.Checked = view.IsDino;
                         checkBoxGibbet.Checked = view.IsGibbet;
                         checkBoxCleaning.Checked = view.IsCleaning;
+                        listBoxCommands.DataSource = view.CustomCommands;
                     }
 
                 }
@@ -138,6 +146,56 @@ namespace ChatBots.Forms
         private void TwitchChannelForm_Load(object sender, EventArgs e)
         {
             LoadData();
+        }
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            CustomCommand command = new CustomCommand()
+            {
+                CommandName = textBoxCommandName.Text,
+                CommandAnswer = textBoxCommandAnswer.Text
+            };
+            listBoxCommands.Items.Add(command);
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            listBoxCommands.Items.Remove(listBoxCommands.SelectedItem);
+            Refresh();
+        }
+
+        private void buttonChange_Click(object sender, EventArgs e)
+        {
+            CustomCommand command = new CustomCommand()
+            {
+                CommandName = textBoxCommandName.Text,
+                CommandAnswer = textBoxCommandAnswer.Text
+            };
+            listBoxCommands.Items.Remove(listBoxCommands.SelectedItem);
+            listBoxCommands.Items.Add(command);
+            Refresh();
+        }
+
+        private void checkBoxCustomCommands_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxCustomCommands.Checked == true)
+            {
+                Size = new Size(890, 400);
+            }
+            else
+            {
+                Size = new Size(565, 400);
+            }
+        }
+
+        private void listBoxCommands_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CustomCommand command = (CustomCommand)listBoxCommands.SelectedItem;
+            if (command != null)
+            {
+                textBoxCommandName.Text = command.CommandName;
+                textBoxCommandAnswer.Text = command.CommandAnswer;
+            }
         }
     }
 }

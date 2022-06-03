@@ -180,7 +180,7 @@ namespace ChatBots
                     twitchChannel.IsCleaning
                 };
                     TwitchIRCClient client = new TwitchIRCClient(twitchChannel.ChannelName, "Quenby_Bot", twitchChannel.Token,
-                        botFunctions, dinoLogic, gibbetLogic);
+                        botFunctions, dinoLogic, gibbetLogic, channelLogic);
                     client.Connect();
                     Task.Run(() => client.Chat(cancellation.Token));
                     Task.Run(() => client.InitGibbet(cancellation.Token));

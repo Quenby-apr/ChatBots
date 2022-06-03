@@ -132,6 +132,7 @@
     <Compile Include="BusinessLogic\DiscordCommands\DinoCommands.cs" />
     <Compile Include="BusinessLogic\DiscordCommands\SimpleCommands.cs" />
     <Compile Include="BusinessLogic\GibbetDictionary.cs" />
+    <Compile Include="BusinessLogic\Models\CustomCommand.cs" />
     <Compile Include="BusinessLogic\TwitchCommands\DinoCommands.cs" />
     <Compile Include="BusinessLogic\Models\ChannelModel.cs" />
     <Compile Include="BusinessLogic\Models\Dinozavr.cs" />
